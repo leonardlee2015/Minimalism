@@ -2,8 +2,8 @@
 ======
 我的天气是一个简明而精致的天气app。
 #Screen Shot
-![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/start.gif)
-![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/running.gif)
+![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/start.gif)<br>
+![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/running.gif)<br>
 ![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/forecast.gif)
 #Installation
 ```bash
@@ -27,3 +27,7 @@ Xcode:
 - Version 7.3
 - SDK: iOS SDK 
 - Deployment Taget: 8.0 ~ 9.3
+
+
+#Version
+ - V1.0.0 删除之前的实例，重新上传版本
