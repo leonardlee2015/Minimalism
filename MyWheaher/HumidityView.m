@@ -43,7 +43,7 @@
     [self addSubview:_cycleView];
     [_cycleView buildView];
     
-    _numberView = [[NumberView alloc] initWithFrame:ScaleRectMake(45, 55, 115, 115)];
+    _numberView = [[NumberView alloc] initWithFrame:ScaleRectMake(35, 55, 115, 115)];
     _numberView.number = self.Humidity;
     _numberView.delegate = self;
   
@@ -51,7 +51,7 @@
     [_numberView buildView];
     
     _titleView = [[MoveTitleLabel alloc] initWithFrame:ScaleRectMake(20, 10, 0,0)];
-    _titleView.title = @"Humidity" ;
+    _titleView.title = NSLocalizedString(@"HumidityViewTitle", @"Humidity");
     _titleView.font = [UIFont fontWithName:@"Avenir-Light" size:MOD(20)];
     _titleView.startOffset = ScalePointMake(-30, 0);
     _titleView.endOffset = ScalePointMake(30, 0);
@@ -94,14 +94,20 @@
     NSRange PerRange = [totalStr rangeOfString:@"%"];
     
     NSMutableAttributedString *AttributedStr = [[NSMutableAttributedString  alloc]initWithString:totalStr];
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc]init];
+    paragraph.alignment = NSTextAlignmentCenter;
     [AttributedStr addAttributes:@{
                                    NSFontAttributeName:[UIFont fontWithName:@"Avenir-Light" size:40],
-                                   NSForegroundColorAttributeName:[UIColor blackColor]
+                                   NSForegroundColorAttributeName:[UIColor blackColor],
+                                   NSBaselineOffsetAttributeName: @(10),
+                                   NSParagraphStyleAttributeName:paragraph
                                    }
                            range:numberRange];
     [AttributedStr addAttributes:@{
                                    NSFontAttributeName:[UIFont fontWithName:@"Avenir" size:19],
-                                   NSForegroundColorAttributeName:[UIColor colorWithWhite:0.4 alpha:1]
+                                   NSForegroundColorAttributeName:[UIColor colorWithWhite:0.4 alpha:1],
+                                   NSBaselineOffsetAttributeName: @(10),
+                                   NSParagraphStyleAttributeName:paragraph,
                                    }
                            range:PerRange];
     

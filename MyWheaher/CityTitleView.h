@@ -8,11 +8,19 @@
 
 #import "BaseWheatherView.h"
 
+
+typedef void(^MoreItemHandler)();
+typedef void(^ShareItemHandler)();
+typedef void(^RightButtonHandler)();
+
 @class City;
 @interface CityTitleView : BaseWheatherView
-@property(nonatomic,strong) City  *city;
-@property(nonatomic,copy) NSString *wheather;
-@property(nonatomic,strong) NSDate *updateTime;
-@property(nonatomic,copy) NSString *station;
+@property(nonnull,nonatomic,strong) City  *city;
+@property(nonnull,nonatomic,copy) NSString *wheather;
+@property(nonnull,nonatomic,strong) NSDate *updateTime;
+@property(nullable,nonatomic,copy) NSString *station;
+@property(nonnull,nonatomic,copy)MoreItemHandler moreItemHandler;
+@property(nonatomic,nonnull,copy)ShareItemHandler shareItemHandler;
+@property(nonatomic,nonnull,copy)RightButtonHandler rightButtonHandler;
 
 @end

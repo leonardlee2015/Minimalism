@@ -1,3 +1,4 @@
+
 //
 //  CityDBData.m
 //  MyWheaher
@@ -7,15 +8,23 @@
 //
 
 #import "CityDbData.h"
+#import "City.h"
 #import <FMDB.h>
+#import "MWHeWeatherClient.h"
+
 static NSString * const ImportCityDataFlag = @"LadCityDataFlag";
 static NSString * const ImportCityConvertFlag = @"Import City Convert Flag";
 static NSString * const ImportCityListFlag = @"Import City List Flag";
+static NSString * const ImportHeCityListFlag = @"Import he City List Flag";
+static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 
-@interface CityDbData ()
+
+
+@interface CityDbData ()<MWHeWeatherClientDelegate>
 @property(nonnull,nonatomic,copy) NSString *dbPath;
 @property(nonnull,nonatomic,strong) FMDatabase *db;
 @property(nonatomic,nonnull,strong) FMDatabaseQueue *dbQueue;
+@property(nonnull,nonatomic,strong) MWHeWeatherClient *client;
 @end
 @implementation CityDbData
 +(CityDbData *)shareCityDbData{
@@ -64,6 +73,71 @@ static NSString * const ImportCityListFlag = @"Import City List Flag";
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
+-(void)updateHeCityList{
+    [self initialHeCityData];
+}
+-(void)initialHeCityData{
+
+    __block BOOL isUpdateHeData = [[[NSUserDefaults standardUserDefaults]valueForKey:ImportHeCityListFlag] doubleValue];
+
+    // 创建和天气城市表
+    if (![_db open]) {
+        [NSException exceptionWithName:NSInternalInconsistencyException reason:@"open db weather.db fail." userInfo:nil];
+    }
+    BOOL success = [_db executeUpdate:@"create table IF NOT EXISTS he_city_list (city TEXT,cnty TEXT,id TEXT PRIMARY KEY,lat FLOAT,lon FLOAT)"];
+    if (!success) {
+        [_db close];
+        return;
+    }
+    [_db close];
+
+    // 表存在或者创建成功，若未更新，更新数据库。
+    if (!isUpdateHeData) {
+
+
+        __weak typeof(self) weakSlef = self;;
+        [_dbQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+            NSString *path = [[NSBundle mainBundle]pathForResource:@"he_city_list" ofType:@"plist"];
+
+            NSArray *cities = [NSArray arrayWithContentsOfFile:path];
+
+            BOOL sucess = [db executeUpdate:@"DELETE FROM he_city_list"];
+
+            if (!sucess) {
+                *rollback = YES;
+                return ;
+            }
+
+
+            for (NSDictionary *city in cities) {
+
+                BOOL success = [db executeUpdate:@"INSERT INTO he_city_list VALUES(?,?,?,?,?)",
+                                city[@"city"],
+                                city[@"cnty"],
+                                city[@"id"],
+                                @([city[@"lat"] floatValue]),
+                                @([city[@"lon"] floatValue])];
+
+                if (!success) {
+                    *rollback = YES;
+                    return ;
+                }
+
+            }
+
+
+            weakSlef.isUpdateCityListSuccess = YES;
+
+            isUpdateHeData = YES;
+
+            [[NSUserDefaults standardUserDefaults] setObject:@(isUpdateHeData) forKey:ImportCityListFlag];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }];
+
+        
+    }
+
+}
 -(void)initializationDB{
     // 获取是否已经导入数据标识。
 
@@ -146,6 +220,7 @@ static NSString * const ImportCityListFlag = @"Import City List Flag";
 
                 isImportCityConvertData = YES;
                 [[NSUserDefaults standardUserDefaults]setObject:@(isImportCityConvertData) forKey:ImportCityConvertFlag];
+                [[NSUserDefaults standardUserDefaults]synchronize];
 
 
 
@@ -188,6 +263,7 @@ static NSString * const ImportCityListFlag = @"Import City List Flag";
 
                 isImportCityListData = YES;
                 [[NSUserDefaults standardUserDefaults] setObject:@(isImportCityListData) forKey:ImportCityListFlag];
+                [[NSUserDefaults standardUserDefaults]synchronize];
                 
                 dispatch_group_leave(group);
             }];
@@ -203,11 +279,17 @@ static NSString * const ImportCityListFlag = @"Import City List Flag";
                 isImportCityData = YES;
                 
                 [[NSUserDefaults standardUserDefaults]  setObject:@(isImportCityData) forKey:ImportCityDataFlag];
+                [[NSUserDefaults standardUserDefaults]synchronize];
             }
         });
         
         
     }
+
+    // 跟新he city lists.
+    [self initialHeCityData];
+
+
 
     
 }
@@ -260,4 +342,237 @@ static NSString * const ImportCityListFlag = @"Import City List Flag";
 
     return cityName;
 }
+
+-(City *)requestHeWeatherCNCityByPinyin:(NSString *)pingying{
+    City *city = [City new];
+
+    if (![_db open]) {
+        return nil;
+    }
+
+    NSString *querySql = @"SELECT  he_city_list.id,he_city_list.city,cn_city_info.pinyin  FROM cn_city_info,he_city_list WHERE cn_city_info.pinyin = ? COLLATE NOCASE AND trim(he_city_list.city)= trim(cn_city_info.name)";
+
+    FMResultSet *resultSet = [_db executeQuery:querySql, pingying];
+
+    if (!resultSet) {
+        NSLog(@"requery  chinese He Weather  city info faild.error:%@", _db.lastErrorMessage);
+        return nil;
+    }
+
+    if ([resultSet next]) {
+        city.cityName = [resultSet stringForColumn:@"pinyin"];
+        city.ZHCityName = [resultSet stringForColumn:@"city"];
+        city.cityId =  [resultSet stringForColumn:@"id"];
+        city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
+    }
+
+    return city;
+    
+}
+
+-(City *)requestHeWeatherCNCityByCityID:(NSString *)cityID{
+    City *city = [City new];
+
+    if (![_db open]) {
+        return nil;
+    }
+
+    NSString *querySql = @"SELECT  he_city_list.id,he_city_list.city,cn_city_info.pinyin  FROM cn_city_info,he_city_list WHERE he_city_list.id = ? COLLATE NOCASE AND trim(he_city_list.city)= trim(cn_city_info.name)";
+
+    FMResultSet *resultSet = [_db executeQuery:querySql, cityID];
+
+    if (!resultSet) {
+        NSLog(@"requery  chinese He Weather  city info faild.error:%@", _db.lastErrorMessage);
+        return nil;
+    }
+
+    if ([resultSet next]) {
+        city.cityName = [resultSet stringForColumn:@"pinyin"];
+        city.ZHCityName = [resultSet stringForColumn:@"city"];
+        city.cityId =  [resultSet stringForColumn:@"id"];
+        city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
+    }
+
+    return city;
+    
+}
+
+-(City *)requestCityByCityName:(NSString *)name{
+    City *city = [City new];
+
+    if (![_db open]) {
+        return nil;
+    }
+
+    NSString *querySql = @"SELECT id , name , country FROM OPEN_WEATHER_CITY_IFNO WHERE name = ? COLLATE NOCASE";
+
+    FMResultSet *resultSet = [_db executeQuery:querySql, name];
+
+    if (!resultSet) {
+        NSLog(@"requery  city info in table OPEN_WEATHER_CITY_IFNO faild.error:%@", _db.lastErrorMessage);
+        return nil;
+    }
+
+    if ([resultSet next]) {
+        city.cityName = [resultSet stringForColumn:@"name"];
+        city.country = [resultSet stringForColumn:@"country"];
+        city.cityId =  [resultSet stringForColumn:@"id"];
+    }
+
+    if (city.cityId == nil) {
+        return nil;
+    }
+
+    if ([city.country isEqualToString:@"CN"]) {
+        querySql = @" SELECT name From CN_CITY_INFO WHERE pinyin = ? COLLATE NOCASE";
+
+        resultSet = [_db executeQuery:querySql, city.cityName];
+
+        if (!resultSet) {
+            NSLog(@"requery  city info in table OPEN_WEATHER_CITY_IFNO faild.error:%@", _db.lastErrorMessage);
+        }
+
+        if ([resultSet next]) {
+            city.ZHCityName = [resultSet stringForColumn:@"name"];
+
+            city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
+        }
+
+    }
+    return city;
+}
+
+-(City *)requestHeWeatherCityByName:(NSString *)name{
+    City *city = [City new];
+
+    if (![_db open]) {
+        return nil;
+    }
+
+
+    NSString *querySql = @"SELECT city , id  FROM he_city_list WHERE city = ? COLLATE NOCASE";
+
+    FMResultSet *resultSet = [_db executeQuery:querySql, name];
+
+    if (!resultSet) {
+        NSLog(@"requery He Weather city info faild.error:%@", _db.lastErrorMessage);
+        return nil;
+    }
+
+    if ([resultSet next]) {
+        city.cityName = [resultSet stringForColumn:@"city"];
+        city.cityId = [resultSet stringForColumn:@"id"];
+        city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
+    }
+
+    return city;
+}
+
+-(NSArray<City *> *)searchHeCitiesByCondition:(NSString *)condition{
+
+    NSMutableArray *cities = [NSMutableArray array];
+
+    NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM he_city_list  where city like '%%%@%%' COLlATE NOCASE AND length(id) = 11",condition];
+
+    if (![_db open]) {
+        return nil;
+    }
+
+    FMResultSet *resultSet = [_db executeQuery:querySQL];
+
+    if (!resultSet) {
+        NSLog(@"search He Weather city info faild.error:%@", _db.lastErrorMessage);
+
+        return nil;
+    }
+
+    while ([resultSet next]) {
+        City *city = [City new];
+        city.cityId = [resultSet stringForColumn:@"id"];
+        city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
+
+        NSString *name = [resultSet stringForColumn:@"city"];
+
+        if ([city.country isEqualToString:@"CN"]) {
+            city.ZHCityName = name;
+
+            NSString *enName = [self requestCityNameByZHCityName:name];
+
+            if (enName && ![enName isEqualToString:@""]) {
+                city.cityName = enName;
+
+            }else{
+                city.cityName = name;
+            }
+        }else{
+            city.cityName = name;
+        }
+
+        city.coordinate.lat = [resultSet stringForColumn:@"lat"];
+        city.coordinate.lon = [resultSet stringForColumn:@"lon"];
+
+        [cities addObject:city];
+    }
+
+    return [cities copy];
+
+
+}
+#pragma mark -  He City data 
+
+
+-(MWHeWeatherClient *)client{
+    if (!_client) {
+        _client = [MWHeWeatherClient client];
+        _client.delegate = self;
+    }
+
+    return _client;
+}
+
+-(void)MWWeatherClient:(MWHeWeatherClient *)client didUpdateSucessFailWithError:(NSError *)error{
+
+
+    _isUpdateCityListSuccess = NO;
+
+}
+
+-(void)MWWeatherClient:(MWHeWeatherClient *)client didUpdateSucessWithWeatherData:(id)weather type:(MWHeDataType)type{
+
+
+    if (type == MWHeDataTypeCities) {
+        NSArray *cities = weather[@"city_info"];
+
+        __weak typeof(self) weakSlef = self;;
+
+        [_dbQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+
+            BOOL sucess = [_db executeUpdate:@"DELETE FROM he_city_list"];
+
+            if (!sucess) {
+                *rollback = YES;
+                return ;
+            }
+
+            for (NSDictionary *city in cities) {
+
+                BOOL success = [_db executeUpdate:@"INSERT INTO he_city_list VALUE(?,?,?,?,?)",
+                 city[@"city"],
+                 city[@"cnty"],
+                 [city[@"lat"] floatValue],
+                 [city[@"lon"] floatValue]];
+
+                if (!success) {
+                    *rollback = YES;
+                    return ;
+                }
+
+
+                weakSlef.isUpdateCityListSuccess = YES;
+            }
+        }];
+    }
+}
 @end
+
+

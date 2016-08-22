@@ -44,7 +44,8 @@
     }
 
     [_titleLabel sizeToFit];
-    
+    _titleLabel.textColor = [UIColor colorWithWhite:0.5 alpha:0.75];
+
     [self addSubview:_titleLabel];
     
     // 根据 _titleLabel 重设 MoveTitleLabel size.

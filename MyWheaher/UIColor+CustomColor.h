@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 
+
+
 @interface UIColor (CustomColor)
 + (UIColor *)customGrayColor;
 + (UIColor *)customRedColor;
@@ -19,3 +21,6 @@
 +(UIColor*)colorWithIntRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
 -(BOOL)isEqualColor:(UIColor*)color;
 @end
+
+extern
+UIColor * color(int red, int green, int blue,CGFloat alpha);

@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @class Coordinate;
-@interface City : NSObject
-@property(nonatomic,copy) NSString *cityName;
-@property(nonatomic,copy) NSString *ZHCityName;
-@property(nonatomic,copy) NSString *cityId;
-@property(nonatomic,strong) Coordinate * coordinate;
-@property(nonatomic,copy) NSString *country;
+@interface City : NSObject<NSCopying,NSCoding>
+@property(nonnull,nonatomic,copy) NSString *cityName;
+@property(nonnull,nonatomic,copy) NSString *ZHCityName;
+@property(nonnull,nonatomic,copy) NSString *cityId;
+@property(nullable,nonatomic,strong) Coordinate * coordinate;
+@property(nonnull,nonatomic,copy) NSString *country;
+@property(nullable,nonatomic,copy) NSNumber *temperature;
+@property(nonnull,nonatomic)NSDate *upateTime;
 @end

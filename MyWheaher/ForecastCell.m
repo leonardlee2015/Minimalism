@@ -14,12 +14,13 @@
 
 @interface ForecastCell ()
 
-@property (nonatomic, strong) UILabel  *weekDayInfoLabel;
-@property (nonatomic, strong) UILabel  *dateLabel;
-@property (nonatomic, strong) UILabel  *minTempLabel;
-@property (nonatomic, strong) UILabel  *maxTempLabel;
-@property (nonatomic, strong) UILabel  *weatherLabel;
-@property (nonatomic, strong) UILabel  *weatherInfoLabel;
+@property (nonnull,nonatomic, strong) UILabel  *weekDayInfoLabel;
+@property (nonnull,nonatomic, strong) UILabel  *dateLabel;
+@property (nonnull,nonatomic, strong) UILabel  *minTempLabel;
+@property (nonnull,nonatomic, strong) UILabel  *maxTempLabel;
+@property (nonnull,nonatomic, strong) UILabel  *weatherLabel;
+@property (nonnull,nonatomic, strong) UILabel  *weatherInfoLabel;
+@property (nonnull,nonatomic,strong) UIImageView *weatherInfoView;
 
 @end
 
@@ -176,9 +177,19 @@
         self.weatherLabel.font          = [UIFont fontWithName:WEATHER_TIME size:40.f];
         
     }
-    
-    [self addSubview:self.weatherLabel];
-    
+
+    self.weatherInfoView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"100"]];
+    self.weatherInfoView.contentMode = UIViewContentModeScaleAspectFit;
+    self.weatherInfoView.frame = self.weatherLabel.frame;
+
+    if (isUsingHeWeatherData) {
+        [self addSubview:self.weatherInfoView];
+    }else{
+        [self addSubview:self.weatherLabel];
+
+
+    }
+
     // 天气描述信息
     self.weatherInfoLabel               = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 300, 12)];
     self.weatherInfoLabel.textAlignment = NSTextAlignmentLeft;
@@ -212,6 +223,11 @@
     // 更新图标
 
     self.weatherLabel.text = [WeatherNumberMeaningTransform fontTextWeatherNumber:weatherData.weather.weatherCode];
+
+    // 更新天气图标.
+    UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@", weatherData.weather.weatherCode]];
+    image = [image imageWithGradientTintColor:[UIColor lightGrayColor]];
+    self.weatherInfoView.image = image;
     
     // 天气描述信息
     self.weatherInfoLabel.text = weatherData.weather.weatherDescription;
@@ -223,11 +239,20 @@
     
     // 星期几
     [formatter setDateFormat:@"EEEE"];
-    [formatter setWeekdaySymbols:@[@"Sun", @"Mon", @"Tues", @"Wed", @"Thur", @"Fri", @"Sat"]];
+    // @[@"Sun", @"Mon", @"Tues", @"Wed", @"Thur", @"Fri", @"Sat"]]
+    [formatter setWeekdaySymbols:@[
+                                   NSLocalizedString(@"Sun", nil),
+                                   NSLocalizedString(@"Mon", nil),
+                                   NSLocalizedString(@"Tues", nil),
+                                   NSLocalizedString( @"Wed", nil),
+                                   NSLocalizedString(@"Thur", nil),
+                                   NSLocalizedString(@"Fri", nil),
+                                   NSLocalizedString(@"Sat", nil)
+                                   ]];
     self.weekDayInfoLabel.textColor = [UIColor blackColor];
     NSString *hourStr               = [NSString stringWithFormat:@"%@", [formatter stringFromDate:weatherData.dt]];
     self.weekDayInfoLabel.text      = hourStr;
-    if ([hourStr isEqualToString:@"Sun"]||[hourStr isEqualToString:@"Sat"]) {
+    if ([hourStr isEqualToString:NSLocalizedString(@"Sun", nil)]||[hourStr isEqualToString:NSLocalizedString(@"Sat", nil)]) {
         
         self.weekDayInfoLabel.textColor = [UIColor redColor];
         

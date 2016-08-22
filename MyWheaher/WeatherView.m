@@ -24,7 +24,7 @@
 
 @interface WeatherView ()<UIScrollViewDelegate>{
 
-    UIScrollView *_baseView;
+
     WeatherIconView *_iconView;
     TemperatureView  * _temperatureView;
     HumidityView * _humidityView;
@@ -47,30 +47,43 @@
     VSeparatorLine *_VSeparator;
 
     ShapeWordView *_shapeWorldView;
+
+    __weak id<WeatherViewDelegate> _delegate;
 }
+
+@property(nonnull,nonatomic,strong) UIScrollView * baseView;
 @end
 @implementation WeatherView
+
+
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
 
     if (self) {
         // 初始化背景ScrollView.
         _baseView = [[UIScrollView alloc]initWithFrame:frame];
-        _baseView.contentSize = self.size;
         _baseView.delegate = self;
+        _baseView.restorationIdentifier = @"baseView";
+        
         _baseView.alwaysBounceVertical = YES;
         [self addSubview:_baseView];
 
         // 初始化 子视图的框架元素.
         _width = self.width;
         _subViewWidth = self.width/2;
+
+        _baseView.contentSize = self.size;
+
         if (iPhone4_4s) {
-            _cityTitleHeight = self.height - 2 * _subViewWidth;
+            _cityTitleHeight = self.height - 2.4 * _subViewWidth;
 
         }else{
             _cityTitleHeight = self.height - 3 * _subViewWidth;
 
         }
+
+        _baseView.contentSize = CGSizeMake(self.width, _cityTitleHeight + 3* _subViewWidth);
+
 
 
         [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
@@ -82,9 +95,32 @@
     // 初始化子视图
 
     _cityTitleView = [[CityTitleView alloc]initWithFrame:CGRectMake(0, 0, _width, _cityTitleHeight  )];
+    _cityTitleView.restorationIdentifier = @"city title view";
     [_baseView addSubview:_cityTitleView];
+    
     [_cityTitleView buildView];
 
+    __weak typeof(self) weakSlef = self;
+
+    _cityTitleView.moreItemHandler = ^(){
+        if (weakSlef.delegate && [weakSlef.delegate respondsToSelector:@selector(weatherViewDidPressMoreItem:)]) {
+            [weakSlef.delegate weatherViewDidPressMoreItem:weakSlef];
+        }
+    };
+
+    _cityTitleView.shareItemHandler = ^{
+        if (weakSlef.delegate && [weakSlef.delegate respondsToSelector:@selector(weatherViewDidPressShareItem:)]) {
+            [weakSlef.delegate weatherViewDidPressShareItem:weakSlef];
+        }
+    };
+    _cityTitleView.rightButtonHandler = ^{
+        
+        if (weakSlef.delegate && [weakSlef.delegate respondsToSelector:@selector(weatherViewDidPressRightButton:)]) {
+            [weakSlef.delegate weatherViewDidPressRightButton:weakSlef];
+        }
+    };
+
+    
     _iconView = [[WeatherIconView alloc]initWithFrame:CGRectMake(0, _cityTitleHeight, _subViewWidth, _subViewWidth)];
     [_baseView addSubview:_iconView];
     [_iconView buildView];
@@ -101,6 +137,7 @@
     [_baseView addSubview:_sunInfoView];
     [_sunInfoView buildView];
 
+#ifdef OLD
     if (!iPhone4_4s){
         _minMaxTempView = [[MinMaxTempView alloc]initWithFrame:CGRectMake(0, _cityTitleHeight+2*_subViewWidth, _subViewWidth, _subViewWidth)];
         [_baseView addSubview:_minMaxTempView];
@@ -111,6 +148,16 @@
         [_windSpeedView buildView];
 
     }
+#else
+    _minMaxTempView = [[MinMaxTempView alloc]initWithFrame:CGRectMake(0, _cityTitleHeight+2*_subViewWidth, _subViewWidth, _subViewWidth)];
+    [_baseView addSubview:_minMaxTempView];
+    [_minMaxTempView buildView];
+
+    _windSpeedView = [[WindSpeedView alloc]initWithFrame:CGRectMake(_subViewWidth, _cityTitleHeight+2*_subViewWidth, _subViewWidth, _subViewWidth)];
+    [_baseView addSubview:_windSpeedView];
+    [_windSpeedView buildView];
+
+#endif
 
     // 初始化子视图间分割线
 
@@ -125,6 +172,7 @@
     _HSeparator3 = [[HSeparatorLine alloc]initWithFrame:CGRectMake(0, _cityTitleHeight+2*_subViewWidth, _width, 0.5)];
     [_baseView addSubview:_HSeparator3];
     [_baseView bringSubviewToFront:_HSeparator3];
+#ifdef OLD
     if (!iPhone4_4s) {
         _HSeparator4 = [[HSeparatorLine alloc]initWithFrame:CGRectMake(0, _cityTitleHeight+3*_subViewWidth, _width, 0.5)];
         [_baseView addSubview:_HSeparator4];
@@ -137,12 +185,20 @@
 
         _VSeparator = [[VSeparatorLine alloc]initWithFrame:CGRectMake(_subViewWidth, _cityTitleHeight, 0.5, 2 * _subViewWidth)];
     }
+#else
+    _HSeparator4 = [[HSeparatorLine alloc]initWithFrame:CGRectMake(0, _cityTitleHeight+3*_subViewWidth, _width, 0.5)];
+    [_baseView addSubview:_HSeparator4];
+    [_baseView bringSubviewToFront:_HSeparator4];
+
+    _VSeparator = [[VSeparatorLine alloc]initWithFrame:CGRectMake(_subViewWidth, _cityTitleHeight, 0.5, 3 * _subViewWidth)];
+
+#endif
     [_baseView addSubview:_VSeparator];
     [_baseView bringSubviewToFront:_VSeparator];
 
     // 添加上拉刷新view
     _shapeWorldView = [[ShapeWordView alloc]initWithFrame:CGRectMake(0, -60, WIDTH, 60)];
-    _shapeWorldView.text = @"Release To Reflesh";
+    _shapeWorldView.text = NSLocalizedString(@"SWViewTitle", @"Release To Reflesh") ;
     _shapeWorldView.font = [UIFont fontWithName:LATO_THIN size:20.f];;
     _shapeWorldView.lineWidth = 0.5f;
     _shapeWorldView.lineColor = [UIColor redColor];
@@ -151,9 +207,9 @@
 
     // 添加上拉 show down view.
     _showDownView = [[ShowDownView  alloc]initWithFrame:CGRectMake(0, 0, 30, 10)];
-    _showDownView.center = CGPointMake(self.width/2, self.height+20.f);
+    _showDownView.center = CGPointMake(self.width/2, self.baseView.contentSize.height+20.f);
     [_baseView addSubview:_showDownView];
-
+        
 
 
 }
@@ -286,4 +342,12 @@
 -(void)resetContentInset{
     _baseView.contentInset = UIEdgeInsetsZero;
 }
+
+/*
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+
+
+}
+*/
+
 @end

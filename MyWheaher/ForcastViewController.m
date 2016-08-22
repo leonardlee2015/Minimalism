@@ -12,14 +12,17 @@
 #import "ForecastWeatherView.h"
 #import "Categories.h"
 #import "GetForcastWeatherData.h"
+#import "GetHeForcastWeatherData.h"
 #import "ForcastWeatherData.h"
 #import "CityDbData.h"
 
 NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Controller Notification";
 
-@interface ForcastViewController ()<UITableViewDataSource, UITableViewDelegate,GetForcastWeatherDataDelegate>
+@interface ForcastViewController ()<UITableViewDataSource, UITableViewDelegate,GetForcastWeatherDataDelegate,GetHeForcastWeatherDataDelegate>
 @property(nonnull,nonatomic,strong)ForcastWeatherData *forcastWeatherData;
 @property(nonnull,nonatomic,strong)GetForcastWeatherData *getForcastData;
+@property(nonnull,nonatomic,strong)GetHeForcastWeatherData *getHeForcastData;
+
 
 @property (nonatomic, strong) UIButton            *button;
 
@@ -73,30 +76,58 @@ NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Control
     [super viewDidAppear:YES];
 
     _getForcastData = [[GetForcastWeatherData alloc]initWithDelegate:self];
+    _getHeForcastData = [[GetHeForcastWeatherData alloc]initWithDelegate:self];
 
-    switch (self.requestType) {
-        case ForcastRequestTypeCityID:{
-            _getForcastData.cityId = self.requstParam;
-            [_getForcastData requestWithCityId];
 
-            break;
+    if (isUsingHeWeatherData) {
+        switch (self.requestType) {
+            case ForcastRequestTypeCityID:{
+                _getHeForcastData.cityId = self.requstParam;
+                [_getHeForcastData requestWithCityId];
 
+                break;
+
+            }
+            case ForcastRequestTypeCityName:{
+                _getHeForcastData.cityName = self.requstParam;
+                [_getHeForcastData requestWithCityName];
+                break;
+            }
+            case ForcastRequestTypeCoordinate:{
+                break;
+            }
+                
+                
+            default:
+                break;
         }
-        case ForcastRequestTypeCityName:{
-            _getForcastData.cityName = self.requstParam;
-            [_getForcastData requestWithCityName];
-            break;
-        }
-        case ForcastRequestTypeCoordinate:{
-            _getForcastData.location = self.requstParam;
-            [_getForcastData requestWithLocation];
-            break;
-        }
 
+    }else{
+        switch (self.requestType) {
+            case ForcastRequestTypeCityID:{
+                _getForcastData.cityId = self.requstParam;
+                [_getForcastData requestWithCityId];
 
-        default:
-            break;
+                break;
+
+            }
+            case ForcastRequestTypeCityName:{
+                _getForcastData.cityName = self.requstParam;
+                [_getForcastData requestWithCityName];
+                break;
+            }
+            case ForcastRequestTypeCoordinate:{
+                _getForcastData.location = self.requstParam;
+                [_getForcastData requestWithLocation];
+                break;
+            }
+                
+                
+            default:
+                break;
+        }
     }
+
 }
 - (void)initTableView {
 
@@ -237,8 +268,10 @@ NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Control
                 str = [NSString stringWithFormat:@"%@%@%@%@",strArray[0], strArray[1],strArray[2],strArray[3]];
                 break;
             }
-            default:
-                break;
+            default:{
+                str = zhStr;
+            }
+
         }
 
 
@@ -274,4 +307,26 @@ NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Control
     
 }
 
+#pragma mark - GetHeForcastWeatherDataDelegate
+
+-(void)GetHeForcastWeather:(GetHeForcastWeatherData *)getData didUpdateFailWithError:(NSError *)error{
+
+}
+-(void)GetHeForcastWeather:(GetHeForcastWeatherData *)getData didUpdateSucessWithData:(ForcastWeatherData *)weatherData{
+
+    self.forcastWeatherData = weatherData;
+
+    self.weatherDataArray = weatherData.forcastWeatherList.mutableCopy;
+
+    NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[weatherData.cnt integerValue]];
+    for (int i=0; i<_weatherDataArray.count; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        [indexPaths addObject:indexPath];
+    }
+    if (indexPaths.count > 0) {
+        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    }
+
+}
 @end

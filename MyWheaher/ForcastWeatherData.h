@@ -12,10 +12,15 @@
 
 #import "Coordinate.h"
 
+
+extern BOOL isUsingHeWeatherData;
+
 @interface ForcastWeatherData : NSObject
 @property(nonatomic,strong, nonnull) City *city;
 @property(nonatomic,strong,nonnull) NSNumber *cnt;
 @property(nonatomic,strong,nonnull) NSArray<ForcastWeather*>* forcastWeatherList;
 
 +(ForcastWeatherData* __nullable)ForcastWeatherDataFromWeatherData:(nonnull NSDictionary*)weatherData;
+
++(ForcastWeatherData* __nullable)ForcastWeatherDataFromHeWeatherData:(nonnull NSDictionary*)weatherData;
 @end

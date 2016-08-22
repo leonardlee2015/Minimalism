@@ -10,7 +10,8 @@
 
 static NSString *baseUrl = @"http://api.openweathermap.org/data/2.5/";
 static NSString *forcastUrl = @"forecast/daily";
-static NSString *appIdKey = @"8781e4ef1c73ff20a180d3d7a42a8c04";
+static NSString *appIdKey = @"1d042782a6f6bab00171268caeebe48d";//@"8781e4ef1c73ff20a180d3d7a42a8c04";
+static NSString * const findUrl = @"find";
 
 @interface OpenWeatherClient ()
 -(NSURLSessionDataTask*) _GET:(nonnull NSString *)URLString Parameters:(nullable NSDictionary*)parameters;
@@ -27,13 +28,17 @@ static NSString *appIdKey = @"8781e4ef1c73ff20a180d3d7a42a8c04";
     return shareclient;
 }
 
++(OpenWeatherClient *)getOpenWeatherClient{
+    return [[OpenWeatherClient alloc]initWithBaseURL:[NSURL URLWithString:baseUrl]];
+}
+
 -(instancetype)initWithBaseURL:(NSURL *)url{
     self = [super initWithBaseURL:url];
     if (self) {
         self.requestSerializer = [AFJSONRequestSerializer serializer];
         self.responseSerializer = [AFJSONResponseSerializer serializer];
         // 
-        self.requestSerializer.timeoutInterval = 10.f;
+        self.requestSerializer.timeoutInterval = 4.f;
 
     }
 
@@ -97,18 +102,14 @@ static NSString *appIdKey = @"8781e4ef1c73ff20a180d3d7a42a8c04";
 -(NSURLSessionDataTask*)getCurrentweatherDataByCityIDs:(nonnull NSArray<NSString *> *)cityIDs{
     NSMutableString *requestCityIDs = [NSMutableString string];
 
-    [cityIDs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (cityIDs.count > 1) {
-            if (idx < (cityIDs.count - 1)) {
-                [requestCityIDs appendFormat:@"%@,",obj];
-            }else{
-                [requestCityIDs appendString:obj];
-            }
-        }else{
-            [requestCityIDs appendString:obj];
+    NSInteger i = 1;
+    for (NSString *cityID in cityIDs) {
+        [requestCityIDs appendFormat:@"%@,",cityID];
+        if (i == cityIDs.count) {
+            [requestCityIDs deleteCharactersInRange:NSMakeRange(requestCityIDs.length-1, 1)];
         }
-
-    }];
+        i++;
+    }
 
     NSDictionary *parameters = @{@"id":[requestCityIDs copy],
                                  @"lang":@"zh"
@@ -168,5 +169,36 @@ static NSString *appIdKey = @"8781e4ef1c73ff20a180d3d7a42a8c04";
 
 -(NSURLSessionDataTask*)getForcastWeatherDataByCoordinate:(Coordinate *)coordinate{
     return  [self getForcastWeatherDataByCoordinate:coordinate day:10];
+}
+
+-(NSURLSessionDataTask *)searchSimilarCitiesByName:(NSString *)cityName{
+    NSMutableDictionary * params  = [@{
+                                      @"APPID":appIdKey,
+                                      @"q":cityName,
+                                      @"type":@"like"
+                                      } mutableCopy];
+
+    __weak typeof(self) weakSlef = self;
+
+    return [self GET:findUrl parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+
+        if (weakSlef.delegate && [weakSlef.delegate respondsToSelector:@selector(WeatherClient:didUpdateSucessWithWeather:)]) {
+            [weakSlef.delegate WeatherClient:weakSlef didUpdateSucessWithWeather:responseObject];
+        }
+
+
+        if (weakSlef.getCompletedBlock) {
+            weakSlef.getCompletedBlock(task, responseObject);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (weakSlef.delegate && [weakSlef.delegate respondsToSelector:@selector(WeatherClient:didUpdateSucessFailWithError:)]) {
+            [weakSlef.delegate WeatherClient:weakSlef didUpdateSucessFailWithError:error];
+        }
+
+        if (weakSlef.getFailBlock) {
+            weakSlef.getFailBlock(task,error);
+        }
+    }];
+    
 }
 @end

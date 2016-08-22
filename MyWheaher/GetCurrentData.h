@@ -8,12 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
+extern BOOL isHeWeatherData;
+
 @class CurrentWeatherData;
 @class GetCurrentData;
 @class Coordinate;
 @protocol GetCurrentDataDelegate <NSObject>
--(void)GetCurrentData:(nonnull GetCurrentData*)getData  getDataSuccessWithWeatherData:(nonnull CurrentWeatherData*)weatherData;
 -(void)GetCurrentData:(nonnull GetCurrentData*)getData getDataFailWithError:(nonnull NSError*)error;
+
+@optional
+-(void)GetCurrentData:(nonnull GetCurrentData*)getData  getDataSuccessWithWeatherData:(nonnull CurrentWeatherData*)weatherData;
+-(void)GetCurrentDatas:(nonnull  GetCurrentData*)getData  getDataSuccessWithWeatherDatas:(nonnull NSDictionary<NSString*,CurrentWeatherData*> *)weatherDatas;
+
+
 
 @end
 @interface GetCurrentData : NSObject
@@ -35,5 +42,6 @@
 -(void)requestWithCoordinate:(nonnull Coordinate*)corrdinate;
 -(void)requestWithCityId:(nonnull NSString*)cityId;
 -(void)requestWithCityName:(nonnull NSString*)cityName;
+-(void)requestWithCityIds:(nonnull NSArray<NSString*>*)cityIds;
 
 @end

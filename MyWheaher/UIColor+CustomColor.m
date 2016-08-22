@@ -8,6 +8,11 @@
 
 #import "UIColor+CustomColor.h"
 
+UIColor * color(int red, int green, int blue,CGFloat alpha)
+{
+    return  [UIColor colorWithIntRed:red green:green blue:blue alpha:alpha];
+}
+
 @implementation UIColor (CustomColor)
 
 +(UIColor *)CustomBlueColor{

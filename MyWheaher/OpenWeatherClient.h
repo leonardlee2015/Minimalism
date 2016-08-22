@@ -5,8 +5,9 @@
 //  Created by  Leonard on 16/4/19.
 //  Copyright © 2016年  Leonard. All rights reserved.
 //
+#import <AFNetworking/AFNetworking.h>
 
-#import "AFHTTPSessionManager.h"
+//#import "AFHTTPSessionManager.h"
 #import "Coordinate.h"
 
 #if 0
@@ -43,6 +44,7 @@ typedef void(^GETFailBlock)(NSURLSessionDataTask * _Nullable task, NSError * _No
 
 
 +(nullable OpenWeatherClient*)shareClient;
++(nullable OpenWeatherClient*)getOpenWeatherClient;
 // current weather request.
 -(nullable NSURLSessionDataTask*)getCurrentweatherDataByCityName:(nonnull NSString *)cityName;
 -(nullable NSURLSessionDataTask*)getCurrentweatherDataByCityId:(nonnull NSString *)cityId;
@@ -58,5 +60,6 @@ typedef void(^GETFailBlock)(NSURLSessionDataTask * _Nullable task, NSError * _No
 -(nullable NSURLSessionDataTask*)getForcastWeatherDataByCityId:(nonnull NSString *)cityId;
 -(nullable NSURLSessionDataTask*)getForcastWeatherDataByCityName:(nonnull NSString *)cityName;
 -(nullable NSURLSessionDataTask*)getForcastWeatherDataByCoordinate:(nonnull Coordinate *)coordinate;
-
+// search  city.
+-(nullable NSURLSessionDataTask*)searchSimilarCitiesByName:(nonnull NSString*)cityName;
 @end

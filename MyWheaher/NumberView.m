@@ -42,7 +42,7 @@
     _numberLabel = [[UILabel alloc]init];
     
     //_numberLabel.backgroundColor = [UIColor greenColor];
-    self.numberLabel.textAlignment = NSTextAlignmentCenter;
+    //self.numberLabel.textAlignment = NSTextAlignmentCenter;
 
     [self setNumberLabelNumber:self.number];
 

@@ -14,6 +14,7 @@
 #import "SunrizeAndSunset.h"
 #import "Coordinate.h"
 
+extern BOOL isUsingHeWeatherData;
 
 @interface CurrentWeatherData : NSObject
 

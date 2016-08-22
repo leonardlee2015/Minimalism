@@ -1,0 +1,34 @@
+//
+//  PrefixHeader.pch
+//  MyWheaher
+//
+//  Created by  Leonard on 16/7/22.
+//  Copyright © 2016年  Leonard. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#ifdef __OBJC__
+
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "CityManager.h"
+#import "City.h"
+#import "OpenWeatherClient.h"
+
+// Categories
+#import "UIViewController+InputAccessoryFunction.h"
+#import "UIView+SetRect.h"
+#import "UIColor+CustomColor.h"
+#import "NSObject+AlertMassage.h"
+#import "UIImage+BitMap.h"
+#import "NSMutableAttributedString+setAttributes.h"
+#import "NSString+multiRanges.h"
+
+
+#endif
+
+#endif /* PrefixHeader_pch */

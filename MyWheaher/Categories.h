@@ -17,4 +17,5 @@
 #import "NSMutableAttributedString+setAttributes.h"
 #import "NSString+multiRanges.h"
 
+extern BOOL isUsingHeWeatherData;
 #endif /* Categories_h */

@@ -52,4 +52,14 @@
  *  @return image with specified time color.
  */
 - (UIImage *) imageWithGradientTintColor:(UIColor *)tintColor;
+/**
+ *  @brief  get snapshot from specified view.
+ *
+ *  @param view view from snapshot
+ *
+ *  @return snapshot image of view.
+ */
++(UIImage*)imageFromView:(UIView*)view;
+
+-(UIImage *)imageBysize:(CGSize)size;
 @end

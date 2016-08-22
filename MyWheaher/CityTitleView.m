@@ -11,6 +11,7 @@
 #import "AddedFont.h"
 #import "Categories.h"
 #import "City.h"
+#import "LeftCityInfoView.h"
 
 
 
@@ -33,11 +34,10 @@
     UIView *_wheatherView;
     WheatherViewAnimationState *_wheatherViewAnimationState;
     
-    UIView *_rightView;
+    UIButton *_rightView;
     WheatherViewAnimationState *_rightViewAnimationState;
-    
-    UIView *_leftView;
-    WheatherViewAnimationState *_leftViewAnimationState;
+
+    LeftCityInfoView *_leftView;
     
     
 }
@@ -59,8 +59,7 @@
         _updateDateLabelAnimationState = [WheatherViewAnimationState new];
         _updateTimeLabelAnimationState = [WheatherViewAnimationState new];
         _rightViewAnimationState = [WheatherViewAnimationState new];
-        _leftViewAnimationState = [WheatherViewAnimationState new];
-        
+
         
     }
     return self;
@@ -129,22 +128,34 @@
     [self addSubview:_updateTimeLabel];
     
     // 创建  left black view.
-    _leftView  = [[UIView alloc]initWithFrame:ScaleRectMake(-30, 22, 35, 60)];
-    _leftView.backgroundColor = [UIColor blackColor];
-    _leftView.alpha = 0.f;
-    
-    [self MoveWithMidRect:_leftView.frame startOffsetP:ScalePointMake(-5, 0) endOffsetP:ScalePointMake(5, 5) WithAnimationState:_leftViewAnimationState];
-    _leftView.frame = [_leftViewAnimationState CGRectStartState];
+    _leftView  = [[LeftCityInfoView alloc]initWithFrame:ScaleRectMake(0, 22, 138, 60)];
+    [_leftView buildView];
+    [_leftView addButtonItemWithImage:[UIImage imageNamed:@"main_weahter_view_menu"]
+                     HeightLightImage:[UIImage imageNamed:@"main_weahter_view_menu_black"]
+                      backgroundColor:color(74, 144, 226, 1)
+                               target:self action:@selector(callMoreItem:)];
+    [_leftView addButtonItemWithImage:[UIImage imageNamed:@"share"]
+                     HeightLightImage:[UIImage imageNamed:@"share_black"]
+                      backgroundColor:color(211, 0, 0, 1)
+                               target:self
+                               action:@selector(callShareItem:)];
+
+
     [self addSubview:_leftView];
-    [self sendSubviewToBack:_leftView];
+    [self bringSubviewToFront:_leftView];
+    
+
     
     
     // 创建  Right red view.
-    _rightView  = [[UIView alloc]initWithFrame:ScaleRectMake(WIDTH -135, 22, 135+100, 60)];
+    _rightView = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_rightView  setFrame:ScaleRectMake(WIDTH -135, 22, 135+100, 60)];
     //_rightView.backgroundColor = [UIColor  redColor];
-    _rightView.backgroundColor = [UIColor whiteColor];
+    _rightView.backgroundColor = [UIColor orangeColor];
     _rightView.alpha = 0.f;
-    
+
+    [_rightView addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
+
     [self MoveWithMidRect:_rightView.frame startOffsetP:ScalePointMake(30, 0) endOffsetP:ScalePointMake(-30, 0) WithAnimationState:_rightViewAnimationState];
     _rightView.frame = [_rightViewAnimationState CGRectStartState];
     [self addSubview:_rightView];
@@ -154,12 +165,32 @@
     
 }
 
+-(IBAction)callMoreItem:(id)sender{
+    [_leftView hideButtunItems];
+    if (self.moreItemHandler) {
+        self.moreItemHandler();
+    }
+}
+-(IBAction)callShareItem:(id)sender{
+    [_leftView hideButtunItems];
+    if (self.shareItemHandler) {
+        self.shareItemHandler();
+    }
+}
+
+-(void)pressRightButton:(UIButton*) button{
+    if (self.rightButtonHandler) {
+        self.rightButtonHandler();
+    }
+}
 -(void)showByDuration:(CGFloat)duration delay:(CGFloat)delay{
     
     [self ToAnimationStartState];
-    
+    [_leftView showByDuration:duration delay:delay];
+
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveLinear animations:^{
         [self ToAnimationMidState];
+
     } completion:^(BOOL finished) {
         if (!finished) {
             [self ToAnimationStartState];
@@ -170,6 +201,7 @@
 }
 
 -(void)hideByDuration:(CGFloat)duration delay:(CGFloat)delay{
+    [_leftView hideByDuration:duration delay:delay];
 
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveLinear animations:^{
         [self ToAnimationEndState];
@@ -197,10 +229,7 @@
     
     _stationLabel.frame = [_stationLabelAnimationState CGRectStartState];
     _stationLabel.alpha = 0.f;
-    
-    _leftView.frame = [_leftViewAnimationState CGRectStartState];
-    _leftView.alpha = 0.f;
-    
+
     _rightView.frame = [_rightViewAnimationState  CGRectStartState];
     _rightView.alpha = 0.f;
     
@@ -222,9 +251,7 @@
     _stationLabel.frame = [_stationLabelAnimationState CGRectMidState];
     _stationLabel.alpha = 1.f;
     
-    _leftView.frame = [_leftViewAnimationState CGRectMidState];
-    _leftView.alpha = 1.f;
-    
+
     _rightView.frame = [_rightViewAnimationState  CGRectMidState];
     _rightView.alpha = 1.f;
 }
@@ -245,9 +272,7 @@
     
     _stationLabel.frame = [_stationLabelAnimationState CGRectEndState];
     _stationLabel.alpha = 0.f;
-    
-    _leftView.frame = [_leftViewAnimationState CGRectEndState];
-    _leftView.alpha = 0.f;
+
     
     _rightView.frame = [_rightViewAnimationState  CGRectEndState];
     _rightView.alpha = 0.f;
@@ -259,8 +284,8 @@
     _city = city;
     
     if (_city) {
-        if ([city.country isEqualToString:@"CN"]) {
-            _cityLabel.text = [self addSpaceForZHStr: city.ZHCityName];
+        if ([city.country isEqualToString:@"CN"] && ![_city.ZHCityName isEqualToString:@""]) {
+            _cityLabel.text = city.ZHCityName;
         }else{
             _cityLabel.text = _city.cityName;
 
@@ -297,8 +322,10 @@
                 str = [NSString stringWithFormat:@"%@ %@ %@ %@",strArray[0], strArray[1],strArray[2],strArray[3]];
                 break;
             }
-            default:
-                break;
+            default:{
+                str = zhStr;
+            }
+                
         }
 
 
@@ -337,7 +364,7 @@
         timeFormatter.locale = [NSLocale currentLocale];
         timeFormatter.dateFormat = @"hh:mm";
         
-        self.updatedTime = [[timeFormatter stringFromDate:_updateTime]stringByAppendingString:@" update"];
+        self.updatedTime = [[timeFormatter stringFromDate:_updateTime]stringByAppendingString:NSLocalizedString(@"CityInfoViewUpdateTimeLabel1", @" update")];
         
         
         

@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class City;
 @interface CityDbData : NSObject
+
+@property (nonatomic,assign) BOOL isUpdateCityListSuccess;
 /**
  *  生成数据库单例
  *
@@ -35,6 +38,16 @@
  *
  *  @return 英文城市拼音名称。
  */
-
 -(nullable NSString *)requestCityNameByZHCityName:(nonnull NSString*)zhCityName;
+
+-(void)updateHeCityList;
+
+-(nullable City *)requestCityByCityName:(NSString *)name;
+
+-(nullable City*)requestHeWeatherCNCityByPinyin:(nonnull NSString*) pingying;
+-(nullable City*)requestHeWeatherCNCityByCityID:(nonnull NSString*) cityID;
+
+-(nullable City*)requestHeWeatherCityByName:(nonnull NSString*) name;
+
+-(nullable NSArray<City*>*)searchHeCitiesByCondition:(nonnull NSString*)condition;
 @end

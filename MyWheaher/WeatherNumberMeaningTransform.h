@@ -14,7 +14,13 @@
 
 + (NSString *)fontTextWeatherNumber:(NSNumber *)number;
 + (UIColor *)iconColor:(NSNumber *)number;
+
+
++(nullable UIColor*)heIconColor:(NSNumber*)number;
++ (BOOL)flashFlagByWeatherCode:(NSNumber*)code;
+
 #ifdef EMITTER
 + (EMitterType)emitterTypeWithNumber:(NSNumber *)number;
+
 #endif
 @end

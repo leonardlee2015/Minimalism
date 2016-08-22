@@ -1,320 +1,294 @@
 //
-//  ViewController.m
+//  RootViewController.m
 //  MyWheaher
 //
-//  Created by  Leonard on 16/4/17.
+//  Created by  Leonard on 16/7/27.
 //  Copyright © 2016年  Leonard. All rights reserved.
 //
 
 #import "ViewController.h"
-#import "GetCurrentData.h"
-#import "CurrentWeatherData.h"
-#import "WeatherView.h"
-#import "ForcastViewController.h"
-#import "FadeBlackView.h"
-#import <CoreLocation/CoreLocation.h>
-#import "UpdatingView.h"
-#import "FailedLongPressView.h"
-#import "TWMessageBarManager.h"
-#import "CityDBData.h"
+#import "WeatherViewController.h"
+#import "CityListViewController.h"
+#import "MWHeWeatherClient.h"
+#import <FLKAutoLayout.h>
 
-@interface ViewController ()<CLLocationManagerDelegate,GetCurrentDataDelegate,WeatherViewDelegate,FailedLongPressViewDelegate>{
-    FadeBlackView *_fadeBlackView;
-    UpdatingView *_updatingView;
-    FailedLongPressView *_failLongPressView;
+NSString *const didChangedCityHanderIdentifier = @"weatherView did change handler id";
+NSString *const didremoveCityHanderIdentifier = @"weatherView did remove handler id";
+NSString *const didselectCityHanderIdentifier = @"weatherView did select handler id";
+NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler id";
 
+@interface ViewController ()<UIScrollViewDelegate,WeatherViewControllerDelegate>
+@property(nonatomic,nonnull,strong)UIScrollView *contentView;
+@property(nonnull,nonatomic,readonly) CityManager *cityManager;
+@property(nonnull,nonatomic,strong) UIPageControl *pageControl;
+@property(nonatomic)NSUInteger currentWeatherViewIndex;
+@property(nonnull,nonatomic,strong)UIButton *requstingMenu;
+@property(nonatomic,nonnull,strong)UIButton *failedMenu;
 
-
-}
-@property(nonatomic,strong) CLLocationManager *locationManager;
-@property(nonatomic,strong) GetCurrentData *getCurrentdata;
-@property(nonatomic,strong) WeatherView *weatherView;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
+
+    [self initializeChildViewController];
+    [self initializePageControl];
+    [self initMenu];
+    [self initializeContentView];
+    [self initializeCityManagerHandlers];
 
 
 
-    // 初始化地址管理器。
-    if ([CLLocationManager locationServicesEnabled]) {
-        _locationManager = [[CLLocationManager alloc]init];
-        _locationManager.delegate = self;
-        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        _locationManager.distanceFilter = 100;
 
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+}
 
-            [_locationManager requestWhenInUseAuthorization];  //调用了这句,就会弹出允许框了.
+-(void)initializeCityManagerHandlers{
+    __weak typeof(self) weakSlef = self;
+    [self.cityManager addDidSelectCityHandler:^(City * _Nullable city, CityType type, NSUInteger index) {
+        if (type == CityTypelocation) {
+            weakSlef.currentWeatherViewIndex = 0;
+            [weakSlef.contentView setContentOffset:CGPointMake(0, 0) animated:YES];
+        }else{
+            weakSlef.currentWeatherViewIndex = index + 1;
+            CGPoint offset = CGPointMake((index+1) * weakSlef.contentView.width , 0);
+
+            [weakSlef.contentView setContentOffset:offset animated:YES];
+
         }
+    } withIdentifier:didselectCityHanderIdentifier];
+
+    [self.cityManager addDidChangedCityHandler:^(City * _Nullable city, CityType type, NSUInteger index) {
+        if (type == CityTypeNormal) {
+            if (index >= self.childViewControllers.count-1) {
+                WeatherViewController *weatherVC = [[WeatherViewController alloc]initWithStyle:WeatherViewstyleTargetCity];
+                weatherVC.delegate = weakSlef;
+
+                weatherVC.city = city;
+                [weakSlef addChildViewController:weatherVC];
+
+                weakSlef.contentView.contentSize = CGSizeMake(weakSlef.contentView.width* (weakSlef.cityManager.citys.count+1), weakSlef.contentView.height);
+                weakSlef.pageControl.numberOfPages = weakSlef.childViewControllers.count;
+            }else {
+                WeatherViewController *weatherVC = weakSlef.childViewControllers[index+1];
+                weatherVC.city = city;
+
+            }
+
+            weakSlef.pageControl.numberOfPages = weakSlef.childViewControllers.count;
+
+        }
+    } withIdentifier:didChangedCityHanderIdentifier];
+
+    [self.cityManager addDidremoveCityHandler:^(City * _Nullable city, CityType type, NSUInteger index) {
+        if (type == CityTypeNormal) {
+            if (weakSlef.currentWeatherViewIndex == index+1) {
+
+                UIViewController *vc = weakSlef.childViewControllers[index+1];
+                [vc.view removeFromSuperview];
+
+                [vc removeFromParentViewController];
 
 
-    }
+                weakSlef.contentView.contentSize = CGSizeMake(weakSlef.contentView.width* (weakSlef.cityManager.citys.count+1), weakSlef.contentView.height);
 
-    _getCurrentdata = [GetCurrentData new];
-    _getCurrentdata.delegate = self;
+                [weakSlef scrollViewDidEndScrollingAnimation:weakSlef.contentView];
 
-    // 添加 weather view
-    _weatherView = [[WeatherView alloc]initWithFrame:self.view.bounds];
-    _weatherView.delegate = self;
-    [_weatherView buildView];
-    [self.view addSubview:_weatherView];
-
-    // 添加刷新背景 view。
-    _fadeBlackView = [[FadeBlackView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:_fadeBlackView];
-
-    // 添加 update View.
-    _updatingView = [[UpdatingView alloc]initWithFrame:CGRectZero];
-    _updatingView.center = self.view.center;
-    [self.view addSubview:_updatingView];
-
-    // 添加fail long press view.
-    _failLongPressView = [[FailedLongPressView alloc]initWithFrame:self.view.bounds];
-    _failLongPressView.delegate = self;
-    [_failLongPressView buildView];
-    [self.view addSubview:_failLongPressView];
-
-    
-
-
-    // 开始获取地址坐标。
-    [self getLocationAndFadeView];
-    
-
-    // 隐藏status bar.
-   // [self setNeedsStatusBarAppearanceUpdate];
-
-}
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-
-
-}
-
-// 隐藏status bar.
-/*
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
-
--(BOOL)prefersStatusBarHidden{
-    return YES;
-}
-*/
-
-#pragma mark - View Animation.
--(void)getLocationAndFadeView{
-    // 显示失败显示画面。
-    [_fadeBlackView show];
-    [_updatingView show];
-
-    // 开始定位。
-    if (_getCurrentdata.cityName) {
-        [_getCurrentdata requestWithCityName];
-
-    }else{
-        [_locationManager startUpdatingLocation];
-    }
-}
-
-
-
-#pragma mark - CLLocationManagerDelegate
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations{
-
-
-    CLLocation *location = [locations lastObject];
-
-    NSLog(@"定位成功:%@",location);
-
-    // 延时执行取数据程序, 并取消上一项请求以排除干扰
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-
-    [self performSelector:@selector(delayRequstDataByCoordinate:) withObject:location afterDelay:0.8f];
-
-
-
-
-}
--(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    if ([CLLocationManager locationServicesEnabled] == NO) {
-
-        NSLog(@"定位失败，定位服务关闭！");
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [_fadeBlackView hide];
-            [_updatingView hide];
-
-            [_failLongPressView show];
-        });
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[TWMessageBarManager sharedInstance]showMessageWithTitle:@"Failed to locate" description:@"Please turn on your Locations Service." type:TWMessageBarMessageTypeError];
-        });
-
-    }else{
-
-        NSLog(@"定位失败，未能定位当前位置！");
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [_fadeBlackView hide];
-            [_updatingView hide];
-
-            [_failLongPressView show];
-        });
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[TWMessageBarManager sharedInstance]showMessageWithTitle:@"Failed to locate" description:@"Sorry, temporarily unable to locate your position." type:TWMessageBarMessageTypeError];
-        });
-
-    }
-
-
-}
-
--(void)delayRequstDataByCoordinate:(CLLocation*)location{
-
-
-    CLGeocoder *coder = [CLGeocoder new];
-
-
-    // 强制是系统语言环境设置为英文，获取英文城市名称。
-    NSMutableArray *userDefultLanguage = [[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"];
-
-    [[NSUserDefaults standardUserDefaults]setObject:[NSArray arrayWithObjects:@"en-US", nil] forKey:@"AppleLanguages"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
-    //NSLog(@"%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"]);
-
-
-        [coder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
-            //NSLog(@"%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"]);
-            if (error) {
-#pragma Warning - 错误处理逻辑未设置，日后需设置处理逻辑。
-                NSLog(@"获取城市名称失败.[%@]", [error description]);
             }else{
 
-                CLPlacemark *mark  = placemarks.firstObject;
+                UIViewController *vc = weakSlef.childViewControllers[index+1];
+                [vc.view removeFromSuperview];
+                [vc removeFromParentViewController];
 
-                NSString *cityName = mark.addressDictionary[@"City"];
-
-
-                // 获取英文城市名成功，根据城市名查询天气信息，如果城市名为中文，从数据库获取中文城市名。
-                if (![cityName isEqualToString:@""]) {
-                    NSLog(@"当前城市是: %@",cityName);
-
-                    if([mark.country isEqualToString:@"China"]){
-                        _getCurrentdata.ZNCithName = [[CityDbData shareCityDbData] requestZhCityNameByCityName:cityName];
-                        _getCurrentdata.ZNCithName = [_getCurrentdata.ZNCithName stringByAppendingString:@"市"];
-
-                    }
-                    _getCurrentdata.cityName = cityName;
-
-                    [_getCurrentdata requestWithCityName];
-
-                }
-                
+                weakSlef.contentView.contentSize = CGSizeMake(weakSlef.contentView.width* (weakSlef.cityManager.citys.count+1), weakSlef.contentView.height);
             }
-            // 还原中文城市名。
-            [[NSUserDefaults standardUserDefaults]setObject:userDefultLanguage forKey:@"AppleLanguages"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }];
 
 
-
-
-
-
-
-
-
+            weakSlef.pageControl.numberOfPages = weakSlef.childViewControllers.count;
+        }
+    } withIdentifier:didremoveCityHanderIdentifier];
 }
-#pragma mark - GetCurrentDataDelegate
--(void)GetCurrentData:(GetCurrentData *)getData getDataSuccessWithWeatherData:(CurrentWeatherData *)weatherData{
-    if (weatherData) {
-        // 先隐藏再显示。
+-(void)initializeContentView{
+    // 添加contentView.
+    _contentView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    _contentView.contentSize = CGSizeMake(_contentView.width* (self.cityManager.citys.count+1), _contentView.height);
+    _contentView.delegate = self;
+    _contentView.pagingEnabled = YES;
+    _contentView.backgroundColor = [UIColor whiteColor];
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_weatherView hide];
-        });
+    [self.view insertSubview:_contentView atIndex:0];
 
+    // 设置ContentView初始化视图。
+    [self scrollViewDidEndScrollingAnimation:_contentView];
+}
 
-        // 1.75秒后显示weather view.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.7501f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            _weatherView.weatherData = weatherData;
-            [_weatherView show];
-
-            [_fadeBlackView hide];
-            [_updatingView hide];
-
-        });
-
-        // 隐藏fail view.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.7501f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [_failLongPressView remove];
-        });
+-(void)initializeChildViewController{
+    WeatherViewController *LocatedVC =[[WeatherViewController alloc]initWithStyle:WeatherViewStyleLocationCity];
+    [self addChildViewController:LocatedVC];
+    LocatedVC.delegate = self;
 
 
+
+    for (City *city in self.cityManager.citys) {
+        WeatherViewController *weatherVC = [[WeatherViewController alloc]initWithStyle:WeatherViewstyleTargetCity];
+        weatherVC.delegate = self;
+
+        weatherVC.city = city;
+        [self addChildViewController:weatherVC];
     }
 }
 
--(void)GetCurrentData:(GetCurrentData *)getData getDataFailWithError:(NSError *)error{
-    NSLog(@"获取数据失败.");
+-(void)initializePageControl{
+    _pageControl = [[UIPageControl alloc]init];
+    _pageControl.userInteractionEnabled = NO;
+    _pageControl.numberOfPages = self.cityManager.citys.count + 1 ;
+    _pageControl.alpha = 0;
+    _pageControl.currentPageIndicatorTintColor = color(145, 145, 145, 100);
+    _pageControl.pageIndicatorTintColor = color(145, 145, 145, 0.5);
+    [self.view addSubview:_pageControl];
 
-    [_updatingView showFailed];
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.51f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [_updatingView hide];
-        [_fadeBlackView hide];
-    });
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.51f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [_failLongPressView show];
-    });
-
-    [self showError];
-
+    [_pageControl alignLeading:@"100" trailing:@"-100" toView:self.view];
+    [_pageControl alignBottomEdgeWithView:self.view  predicate:@"-10"];
 }
--(void)showError{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[TWMessageBarManager sharedInstance] showMessageWithTitle:@"Network Unreachable"
-                                                       description:@"Please try later."
-                                                              type:TWMessageBarMessageTypeError
-                                                          callback:^{}];
-    });
+
+-(void)initMenu{
+    /*
+     *初始化 WeatherViewStatusReqesting 和 WeatherViewStatusFailed情况下使用的menu.
+     */
+
+    _requstingMenu = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_requstingMenu setImage:[UIImage imageNamed:@"noun_more_white"] forState:UIControlStateNormal];
+    [_requstingMenu setImage:[UIImage imageNamed:@"noun_more_black"] forState:UIControlStateHighlighted];
+    [_requstingMenu addTarget:self action:@selector(pressMenu:) forControlEvents:UIControlEventTouchUpInside];
+    _requstingMenu.alpha = 0.f;
+
+    [self.view addSubview:_requstingMenu];
+    [_requstingMenu alignTopEdgeWithView:self.view predicate:@"9"];
+    [_requstingMenu alignLeadingEdgeWithView:self.view predicate:@"16"];
+
+
+    _failedMenu = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_failedMenu setImage:[UIImage imageNamed:@"noun_more_black"
+                           ] forState:UIControlStateNormal];
+    [_failedMenu setImage:[UIImage imageNamed:@"noun_more_white"] forState:UIControlStateHighlighted];
+    [_failedMenu addTarget:self action:@selector(pressMenu:) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.view addSubview:_failedMenu];
+    [_failedMenu alignTopEdgeWithView:self.view predicate:@"9"];
+    [_failedMenu alignLeadingEdgeWithView:self.view predicate:@"16"];
+    _failedMenu.alpha = 0.f;
 }
- #pragma mark - WeatherViewDelegate;
--(void)weatherViewPullUp:(WeatherView *)weatherView{
 
-    [self getLocationAndFadeView];
-    //[_locationManager requestLocation];
-    //[self getLocationAndFadeView];
+-(IBAction)pressMenu:(id)sender{
+    CityListViewController *vc = [[CityListViewController alloc]init];
+    [self presentViewController:vc animated:YES completion:^{
 
-
-
+    }];
 }
--(void)weatherViewPullDown:(WeatherView *)weatherView{
 
-    ForcastViewController *vc = [[ForcastViewController alloc]init];
-    vc.requestType = ForcastRequestTypeCityName;
-    vc.requstParam = _getCurrentdata.cityName;
 
-    [self presentViewController:vc animated:YES completion:nil];
-    
+
+-(void)dealloc{
+
+    [self.cityManager removeDidremoveCityHandlerByIdentifier:didremoveCityHanderIdentifier];
+    [self.cityManager removeDidSelectCityHandlerByIdentifier:didselectCityHanderIdentifier];
+    [self.cityManager removeDidChangedCityHandlerByIdentifier:didChangedCityHanderIdentifier];
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self scrollViewDidEndScrollingAnimation:self.contentView];
 }
 - (void)didReceiveMemoryWarning {
+
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - FailedLongPressViewDelegate
-- (void)pressEvent:(FailedLongPressView *)view {
+/*
+ #pragma mark - Navigation
 
-    [_failLongPressView hide];
-    [self getLocationAndFadeView];
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
+
+#pragma mark - UIScrollViewDelegate
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+
+    NSUInteger index  = _contentView.contentOffset.x / _contentView.width;
+
+    WeatherViewController *vc = self.childViewControllers[index];
+
+    UIView  *view = vc.view;
+    view.x = _contentView.width *index;
+    view.y = 0;
+    view.width = _contentView.width;
+    view.height = _contentView.height;
+
+    [_contentView addSubview:view];
+
+    self.currentWeatherViewIndex =index;
+    self.pageControl.currentPage = index;
+
+    [self changeButtonvisibleByStatus:vc.status];
+
+}
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    [self scrollViewDidEndScrollingAnimation:scrollView];
 }
 
+#pragma mark - WeatherViewControllerDelegate
+-(void)viewContoller:(WeatherViewController *)vc StatusDidChange:(WeatherViewStatus)status{
+    NSUInteger index = [self.childViewControllers indexOfObject:vc];
+
+    if (index == self.currentWeatherViewIndex) {
+
+        [self changeButtonvisibleByStatus:status];
+      }
+
+}
+
+-(void)changeButtonvisibleByStatus:(WeatherViewStatus)status{
+
+    if (status == WeatherViewStatusNormal) {
+        _pageControl.alpha = 1.f;
+        //[self.view bringSubviewToFront:_pageControl];
+        _requstingMenu.alpha = 0.f;
+        //[self.view bringSubviewToFront:_requstingMenu];
+        _failedMenu.alpha = 0.f;
+
+
+    }else if(status == WeatherViewRequesting){
+        _pageControl.alpha = 1.f;
+        _requstingMenu.alpha = 1.f;
+        _failedMenu.alpha = 0.f;
+
+    }else{
+        _pageControl.alpha = 0.f;
+        _requstingMenu.alpha = 0.f;
+        _failedMenu.alpha = 1.f;
+    }
+
+
+}
+#pragma mark - Poperties.
+@synthesize cityManager = _cityManager;
+-(CityManager *)cityManager{
+    if (!_cityManager) {
+        _cityManager = [CityManager shareManager];
+
+        NSLog(@"[%@ CityManager:%@]", NSStringFromClass([self class]), _cityManager);
+    }
+    
+    return _cityManager;
+}
 
 @end

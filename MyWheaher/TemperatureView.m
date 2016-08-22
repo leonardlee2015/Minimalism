@@ -30,7 +30,7 @@
     // create titleLabel
     self.titleLabel = [[MoveTitleLabel alloc]initWithFrame:ScaleRectMake(20, 10, 0, 0)];
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]
-                                      initWithString:@"Temperature"
+                                      initWithString:NSLocalizedString(@"TemperatureViewTitle", @"Temperature")
                                       attributes:@{
                                                    NSFontAttributeName:[UIFont fontWithName:@"Avenir-Light" size:MOD(19)],
                                                    NSForegroundColorAttributeName: [UIColor colorWithWhite:0.3 alpha:1.0f]

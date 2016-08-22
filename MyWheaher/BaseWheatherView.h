@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UIView+SetRect.h"
 
+
 #define SHOW_DURATION 1.75f
 #define HIDE_DURATION 0.75f
 #define MOD(element) ((element) * self.scaleConst)
@@ -30,7 +31,7 @@
  *  @param duration animation duration.
  *  @param delay    animation delay.
  */
--(void)additionShowAnimationToView:(UIView*)view byDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay;
+-(void)additionShowAnimationToView:(nullable UIView*)view byDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay;
 
 /**
  *  @brief additon animation will play while perform [WheatherView hide].
@@ -39,7 +40,7 @@
  *  @param duration animation duration.
  *  @param delay    animation delay.
  */
--(void)additionHideAnimationToView:(UIView*)view byDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay;
+-(void)additionHideAnimationToView:(nullable UIView*)view byDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay;
 
 @end
 @interface BaseWheatherView : UIView

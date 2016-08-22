@@ -20,6 +20,7 @@
     MoveTitleLabel *_titleLabel;
     UILabel *_upLabel;
     UILabel *_downLabel;
+    UIImageView *_coudIconView;
     BOOL _flash;
 }
 @property(nonnull,copy,nonatomic) NSString *weatherText;
@@ -31,7 +32,7 @@
     //self.backgroundColor = [UIColor blackColor];
     _titleLabel = [[MoveTitleLabel alloc]initWithFrame:ScaleRectMake(20, 10, 0, 0)];
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]
-                                      initWithString:@"Weather"
+                                      initWithString:NSLocalizedString(@"WeatherIconVTitle", @"Weather")
                                       attributes:@{
                                                    NSFontAttributeName:[UIFont fontWithName:@"Avenir-Light" size:MOD(19)],
                                                    NSForegroundColorAttributeName: [UIColor colorWithWhite:0.3 alpha:1.0f]
@@ -47,8 +48,25 @@
     _upLabel.text = self.weatherText;
     _upLabel.textColor = self.upColor;
     _upLabel.textAlignment = NSTextAlignmentCenter;
-    [self addSubview:_upLabel];
-    
+
+    _coudIconView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"100"]];
+    _coudIconView.contentMode = UIViewContentModeScaleAspectFill;
+    _coudIconView.frame  = ScaleRectMake(0, 0, 110, 110);
+    _coudIconView.center = _upLabel.center;
+    _coudIconView.x = _coudIconView.x - MOD(10);
+    _coudIconView.y = _coudIconView.y - MOD(10);
+
+
+    if (isUsingHeWeatherData) {
+        [self addSubview:_coudIconView];
+
+    }else{
+
+        [self addSubview:_upLabel];
+
+
+    }
+
     
     
 }
@@ -58,10 +76,12 @@
     [_titleLabel hideByDuration:duration delay:delay ];
 
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveLinear animations:^{
+        _coudIconView.alpha  = 0.f;
         _upLabel.alpha = 0.f;
     } completion:nil];
 
     [_upLabel pop_removeAllAnimations];
+    [_coudIconView pop_removeAllAnimations];
     
     [super hideByDuration:duration delay:delay];
 }
@@ -72,22 +92,37 @@
     _upLabel.alpha = 0.f;
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveLinear animations:^{
         _upLabel.alpha = 1.f;
+        _coudIconView.alpha = 1.f;
     } completion:nil];
 
     if (_flash) {
-        //POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
-        POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLabelTextColor];
-        anim.duration = 2.f;
-        anim.autoreverses = YES;
-        anim.repeatForever = YES;
+        if (isUsingHeWeatherData) {
+            POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
+            anim.duration =    2.f;
+            anim.autoreverses = YES;
+            anim.repeatForever = YES;
+            anim.fromValue = @(0.75f);
+            anim.toValue = @(0.f);
+            [_coudIconView pop_addAnimation:anim forKey:nil];
 
-        anim.fromValue = [UIColor clearColor];
-        anim.toValue = _upLabel.textColor;
-        //anim.fromValue = @1.f;
-        //anim.toValue = @0.f;
 
-        [_upLabel pop_addAnimation:anim forKey:nil];
-    }
+        }else{
+            //POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
+            POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLabelTextColor];
+            anim.duration = 2.f;
+            anim.autoreverses = YES;
+            anim.repeatForever = YES;
+
+            anim.fromValue = [UIColor clearColor];
+            anim.toValue = _upLabel.textColor;
+            //anim.fromValue = @1.f;
+            //anim.toValue = @0.f;
+
+            [_upLabel pop_addAnimation:anim forKey:nil];
+        }
+
+        }
+
 
     [super showByDuration:duration delay:delay];
 }
@@ -95,17 +130,30 @@
 -(void)setWheatherCode:(NSNumber*)wheatherCode{
     _wheatherCode = wheatherCode;
     if (_wheatherCode) {
-        NSString *wheatherStr = [WeatherNumberMeaningTransform fontTextWeatherNumber:_wheatherCode];
-        _upLabel.text = wheatherStr;
-        _downLabel.text = wheatherStr;
-        
-        UIColor *color = [WeatherNumberMeaningTransform iconColor:_wheatherCode];
-        _upLabel.textColor = color;
-        
-        
-        if ([color isEqualColor:[UIColor redColor]] ) {
-            _flash = YES;
+        if (isUsingHeWeatherData) {
+            UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",wheatherCode]];
+            image = [image imageWithGradientTintColor:[WeatherNumberMeaningTransform heIconColor:wheatherCode]];
+            
+            _coudIconView.image = image;
+            _flash = [WeatherNumberMeaningTransform flashFlagByWeatherCode:wheatherCode];
+
+
+        }else{
+
+            NSString *wheatherStr = [WeatherNumberMeaningTransform fontTextWeatherNumber:_wheatherCode];
+            _upLabel.text = wheatherStr;
+            _downLabel.text = wheatherStr;
+
+            UIColor *color = [WeatherNumberMeaningTransform iconColor:_wheatherCode];
+            _upLabel.textColor = color;
+
+
+            if ([color isEqualColor:[UIColor redColor]] ) {
+                _flash = YES;
+            }
+
         }
+
         
     }
 }

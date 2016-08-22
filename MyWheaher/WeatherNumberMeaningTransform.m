@@ -10,22 +10,60 @@
 
 @implementation WeatherNumberMeaningTransform
 
+
++(BOOL)flashFlagByWeatherCode:(NSNumber *)code{
+    NSArray *flashCodes = @[
+                               @(209), @(210), @(211), @(212), @(213),
+                               @(300),@(301),@(302),@(303),@(304),@(305),@(306),@(307),@(308),@(309),@(310),@(311),@(312),@(313),
+                               @(502),@(503),@(504),@(507),@(508),
+                               @(900)
+                               ];
+
+
+    NSNumber *tCode = @([code integerValue]);
+
+    return [flashCodes containsObject:tCode];
+
+}
+
++(UIColor *)heIconColor:(NSNumber *)number{
+    NSUInteger weatherCode = [number integerValue];
+    if (weatherCode>=100 && weatherCode<=208) {
+        return [UIColor orangeColor];
+
+    }else if (weatherCode>208 && weatherCode<400){
+        return [UIColor redColor];
+
+    }else if (weatherCode>=400 && weatherCode <502){
+        return [UIColor lightGrayColor];
+
+    }else if (weatherCode>=502 && weatherCode<900){
+        return [UIColor darkGrayColor];
+
+    }else if (weatherCode == 900){
+        return [UIColor redColor];
+
+    }else{
+        return [UIColor lightGrayColor];
+    }
+
+}
 + (NSString *)fontTextWeatherNumber:(NSNumber *)number {
     
     // Clouds
-    // 800	clear sky
-    // 801	few clouds
-    // 802	scattered clouds
-    // 803	broken clouds
-    // 804  overcast clouds
+    // 800	clear sky   100
+    // 801	few clouds  102
+    // 802	scattered clouds 10x
+    // 803	broken clouds 10x
+    // 804  overcast clouds 10x
     
     /*
      Snow
      ID	Meaning	Icon
-     600	light snow	[[file:13d.png]]
-     601	snow	[[file:13d.png]]
-     602	heavy snow	[[file:13d.png]]
-     611	sleet	[[file:13d.png]]
+     600	light snow	[[file:13d.png]] 400
+     601	snow	[[file:13d.png]] 401
+     602	heavy snow	[[file:13d.png]] 402
+     611	sleet	[[file:13d.png]]   404
      612	shower sleet	[[file:13d.png]]
      615	light rain and snow	[[file:13d.png]]
      616	rain and snow	[[file:13d.png]]
@@ -35,7 +73,7 @@
      
      
      
-     701	mist	[[file:50d.png]]
+     701	mist	[[file:50d.png]] 50x
      711	smoke	[[file:50d.png]]
      721	haze	[[file:50d.png]]
      731	sand, dust whirls	[[file:50d.png]]
@@ -49,7 +87,7 @@
      
      Rain
      ID	Meaning	Icon
-     500	light rain	[[file:10d.png]]
+     500	light rain	[[file:10d.png]]  305
      501	moderate rain	[[file:10d.png]]
      502	heavy intensity rain	[[file:10d.png]]
      503	very heavy rain	[[file:10d.png]]
@@ -117,6 +155,8 @@
      961	violent storm
      962	hurricane
      */
+
+
     
     NSString *weatherText = nil;
     
@@ -291,8 +331,8 @@
 
 + (UIColor *)iconColor:(NSNumber *)number {
     UIColor *color = nil;
-    
-    
+
+
     switch (number.intValue) {
             
             // Extreme + Additional
@@ -415,6 +455,9 @@
     return color;
     
 }
+
+
+
 #ifdef EMITTER
 + (EMitterType)emitterTypeWithNumber:(NSNumber *)number {
     
@@ -533,5 +576,8 @@
     
     return type;
 }
+
+
+
 #endif
 @end

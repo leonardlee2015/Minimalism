@@ -2,10 +2,9 @@
 //  PathDirectionView.h
 //  Path
 //
-//  Created by XianMingYou on 15/2/27.
+//  Created by Leonard on 15/3/20.
 //
-//  https://github.com/YouXianMing
-//  http://www.cnblogs.com/YouXianMing/
+//  Copyright © 2016年 ctd.leonard. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

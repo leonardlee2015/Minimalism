@@ -123,4 +123,24 @@
     return tintedImage;
 }
 
++(UIImage *)imageFromView:(UIView *)view{
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0f);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return image;
+}
+
+-(UIImage *)imageBysize:(CGSize)size{
+    // get source image from bundle.
+    // get bitmap image with sipecified size.
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0.f);
+    [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
+
+    UIImage *destinationImage = UIGraphicsGetImageFromCurrentImageContext() ;
+    UIGraphicsEndImageContext() ;
+    return destinationImage;
+}
 @end

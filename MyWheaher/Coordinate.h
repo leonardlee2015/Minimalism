@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface Coordinate : NSObject
+@interface Coordinate : NSObject<NSCoding>
 @property(nonatomic,copy) NSString *lat;
 @property(nonatomic,copy) NSString *lon;
 @end

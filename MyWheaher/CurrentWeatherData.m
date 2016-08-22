@@ -8,6 +8,8 @@
 
 #import "CurrentWeatherData.h"
 
+BOOL isUsingHeWeatherData = YES;
+
 
 @implementation CurrentWeatherData
 -(instancetype)init{
