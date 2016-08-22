@@ -8,6 +8,7 @@
 #Installation
 ```bash
 cd MyWheaher
+rm -rf Pofile.lock
 pod install --no-verbose --no-repo-update
 ```
 #Dependency
@@ -30,4 +31,5 @@ Xcode:
 
 
 #Version
+ _ V2.0.1 添加多城市天气支持，更换天气数据源，添加天气界面进入多城市管理界面和天气更新功能。
  - V1.0.0 删除之前的实例，重新上传版本
