@@ -144,8 +144,8 @@
     _threeBladeView.circleByOneSecond = _circleByOneSecond;
 }
 -(NSAttributedString *)NumberView:(NumberView *)numberView accessNumber:(CGFloat)number{
-    NSString *numStr = [NSString stringWithFormat:@"%.2f",number];
-    NSString *unitStr = [NSString stringWithFormat:@"mps"];
+    NSString *numStr = [NSString stringWithFormat:@"%.2f",number*3.6];
+    NSString *unitStr = [NSString stringWithFormat:@"kmph"];
     NSString *totalStr = [numStr stringByAppendingString:unitStr];
     
     NSRange unitRange = [totalStr rangeOfString:unitStr];
