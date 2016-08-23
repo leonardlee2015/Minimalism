@@ -2,9 +2,9 @@
 ======
 我的天气是一个简明而精致的天气app。
 #Screen Shot
-![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/start.gif)<br>
-![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/running.gif)<br>
-![](https://github.com/leonardlee2015/MyWheaher/blob/master/snapshot/forecast.gif)
+![](https://github.com/leonardlee2015/MyWeather/blob/master/snapshot/start2.gif)<br>
+![](https://github.com/leonardlee2015/MyWeather/blob/master/snapshot/CityManager.gif)<br>
+![](https://github.com/leonardlee2015/MyWeather/blob/master/snapshot/forecast2.gif)
 #Installation
 ```bash
 cd MyWheaher
