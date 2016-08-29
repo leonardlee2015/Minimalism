@@ -345,6 +345,19 @@ NSString *const ADDKey = @"add";
     XCTAssert(flash, @"flash cannot work");
 
 }
+-(void)testCheckZHenvironment{
+    // 从NSUserDefaults中取语言环境信息。
+    NSArray *appleLanguages = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"];
+
+    // 判断是否包含中文语言ID。若包含返回YES ,否则返回NO.
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS [c] %@", @"zh-"];
+
+    NSArray *resultArray = [appleLanguages filteredArrayUsingPredicate:predicate];
+
+    BOOL result = resultArray.count>0 ? YES: NO;
+
+    XCTAssert(result , @"test predicate failed");
+}
 #pragma mark - delegate
 
 -(void)searchCityData:(SearchCityData *)searchCityData didUpdateSucessWithData:(NSArray *)cities{

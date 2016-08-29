@@ -16,6 +16,7 @@
 #import "UIImage+BitMap.h"
 #import "NSMutableAttributedString+setAttributes.h"
 #import "NSString+multiRanges.h"
+#import "Debug.h"
 
 extern BOOL isUsingHeWeatherData;
 #endif /* Categories_h */

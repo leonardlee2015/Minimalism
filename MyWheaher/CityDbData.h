@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define NEWCITYDATA  1
+
 @class City;
 @interface CityDbData : NSObject
 
@@ -43,11 +45,14 @@
 -(void)updateHeCityList;
 
 -(nullable City *)requestCityByCityName:(NSString *)name;
+-(nullable City*)requestCityByZHCityName:(NSString *)ZHname provinceName:(nonnull NSString*)provinceName;
+
 
 -(nullable City*)requestHeWeatherCNCityByPinyin:(nonnull NSString*) pingying;
 -(nullable City*)requestHeWeatherCNCityByCityID:(nonnull NSString*) cityID;
 
 -(nullable City*)requestHeWeatherCityByName:(nonnull NSString*) name;
+-(nullable City*)requestHeWeatherCityByZHName:(nonnull NSString*) ZHName province:(nonnull NSString*)province;
 
 -(nullable NSArray<City*>*)searchHeCitiesByCondition:(nonnull NSString*)condition;
 @end

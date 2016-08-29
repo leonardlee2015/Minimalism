@@ -288,15 +288,15 @@ GetCurrentDataDelegate
 
     // 强制是系统语言环境设置为英文，获取英文城市名称。
     NSMutableArray *userDefultLanguage = [[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"];
-
     //#define test
 #ifndef test
+#if 0
     [[NSUserDefaults standardUserDefaults]setObject:[NSArray arrayWithObjects:@"en-US", nil] forKey:@"AppleLanguages"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
     //NSLog(@"%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"]);
 
-
+#endif
     [coder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         //NSLog(@"%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"]);
         if (error) {
@@ -322,7 +322,9 @@ GetCurrentDataDelegate
             CLPlacemark *mark  = placemarks.firstObject;
 
             NSString *cityName = mark.addressDictionary[@"City"];
-            locationCity.cityName = cityName;
+            NSString *province = mark.addressDictionary[@"State"];
+            NSString *CtyCode = mark.addressDictionary[@"CountryCode"];
+
 
             // 获取英文城市名成功，根据城市名查询天气信息，如果城市名为中文，从数据库获取中文城市名。
             CityDbData *DB = [CityDbData shareCityDbData];
@@ -347,30 +349,50 @@ GetCurrentDataDelegate
 
             }else if (isUsingHeWeatherData) {
 
-                if([mark.country isEqualToString:@"China"]){
-                    city = [DB requestHeWeatherCNCityByPinyin:cityName];
 
-                    if (city) {
-                        [CityManager shareManager].locatedCity = [city copy];
+                if([self isZHLanguageenvironment]){
+                    cityName = [cityName substringWithRange:NSMakeRange(0, cityName.length-1)];
+                    province = [province substringWithRange:NSMakeRange(0, province.length-1)];
 
-                    }
-                    _getHeWeatherData.cityName = cityName;
-                    _getHeWeatherData.cityId = city.cityId;
+                    city = [DB requestHeWeatherCityByZHName:cityName province:province];
+                }else{
+                    if ([CtyCode isEqualToString:@"CN"]) {
 
-                    if (enableRequstWeather ) {
-
-                        enableRequstWeather = NO;
-                        [_getHeWeatherData requestWithCityId];
-
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            enableRequstWeather = YES;
-                        });
+                        city = [DB requestHeWeatherCNCityByPinyin:cityName];
+                    }else{
+                        city = [DB requestHeWeatherCityByName:cityName];
                     }
                 }
 
 
+                if (city) {
+                    [CityManager shareManager].locatedCity = [city copy];
+
+                }
+
+                _getHeWeatherData.cityName = city.cityName;
+                _getHeWeatherData.cityId = city.cityId;
+
+                if (enableRequstWeather ) {
+
+                    enableRequstWeather = NO;
+                    [_getHeWeatherData requestWithCityId];
+
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        enableRequstWeather = YES;
+                    });
+                }
+
+
+
             }else{
-                city = [DB requestCityByCityName:cityName];
+                if ([self isZHLanguageenvironment]) {
+                    
+                    city = [DB requestCityByZHCityName:cityName provinceName:province];
+                }else{
+                    city = [DB requestCityByCityName:cityName];
+
+                }
                 if (city) {
                     [CityManager shareManager].locatedCity = [city copy];
                 }
@@ -395,10 +417,10 @@ GetCurrentDataDelegate
 
         }
         // 还原中文城市名。
-
+#if 0
         [[NSUserDefaults standardUserDefaults]setObject:userDefultLanguage forKey:@"AppleLanguages"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-
+#endif
     }];
 #endif
 
@@ -408,6 +430,21 @@ GetCurrentDataDelegate
 
 
 
+
+}
+
+-(BOOL)isZHLanguageenvironment{
+
+    // 从NSUserDefaults中取语言环境信息。
+    NSArray *appleLanguages = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"];
+
+    // 判断是否包含中文语言ID。若包含返回YES ,否则返回NO.
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS [c] %@", @"zh-"];
+
+    NSString *firstObject = appleLanguages.firstObject;
+
+
+    return [predicate evaluateWithObject:firstObject];
 
 }
 #pragma mark - GetCurrentDataDelegate

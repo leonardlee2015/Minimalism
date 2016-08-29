@@ -52,6 +52,7 @@
 		D720BA831CD06D5700FE0B21 /* ForcastWeatherData.m in Sources */ = {isa = PBXBuildFile; fileRef = D720BA821CD06D5700FE0B21 /* ForcastWeatherData.m */; };
 		D720BA891CD06FA700FE0B21 /* ForcastWeather.m in Sources */ = {isa = PBXBuildFile; fileRef = D720BA881CD06FA700FE0B21 /* ForcastWeather.m */; };
 		D7291B511CCE5AE000901485 /* AFNetworkActivityLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = D7291B501CCE5AE000901485 /* AFNetworkActivityLogger.m */; };
+		D729FC511D7354DE001820FB /* weather.db in Resources */ = {isa = PBXBuildFile; fileRef = D729FC501D7354DE001820FB /* weather.db */; };
 		D731790F1D60D5830028DBD6 /* MWHeWeatherClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D731790E1D60D5830028DBD6 /* MWHeWeatherClient.m */; };
 		D73179111D60DEBC0028DBD6 /* https.cer in Resources */ = {isa = PBXBuildFile; fileRef = D73179101D60DEBC0028DBD6 /* https.cer */; };
 		D7321C571D49460000268BE6 /* WeatherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7321C561D49460000268BE6 /* WeatherViewController.m */; };
@@ -104,7 +105,6 @@
 		D73B4EB91CC3C7F00091DC4A /* Weather&Time.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D73B4EAC1CC3C77D0091DC4A /* Weather&Time.ttf */; };
 		D742D4C11CC613CF00398B26 /* Coordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = D742D4C01CC613CF00398B26 /* Coordinate.m */; };
 		D759B0C61CC92D1C00D1BB93 /* GetCurrentData.m in Sources */ = {isa = PBXBuildFile; fileRef = D759B0C51CC92D1C00D1BB93 /* GetCurrentData.m */; };
-		D75C6ABA1CDCFF970031878E /* city_name_convert.json in Resources */ = {isa = PBXBuildFile; fileRef = D75C6AB91CDCFF970031878E /* city_name_convert.json */; };
 		D75C6ABD1CDD017E0031878E /* CityDbData.m in Sources */ = {isa = PBXBuildFile; fileRef = D75C6ABC1CDD017E0031878E /* CityDbData.m */; };
 		D75C70811CCBC41300018444 /* Weather.m in Sources */ = {isa = PBXBuildFile; fileRef = D75C70801CCBC41300018444 /* Weather.m */; };
 		D75C70851CCBCCE700018444 /* Temperature.m in Sources */ = {isa = PBXBuildFile; fileRef = D75C70841CCBCCE700018444 /* Temperature.m */; };
@@ -118,8 +118,6 @@
 		D77634F91D5C4FD40030F18F /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D77634F81D5C4FD40030F18F /* CoreTelephony.framework */; };
 		D77634FB1D5C4FE40030F18F /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D77634FA1D5C4FE40030F18F /* libstdc++.tbd */; };
 		D77634FD1D5C4FF10030F18F /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D77634FC1D5C4FF10030F18F /* libz.tbd */; };
-		D77BB1461D62E8EC0022CBC6 /* he_city_list.plist in Resources */ = {isa = PBXBuildFile; fileRef = D77BB1451D62E8EC0022CBC6 /* he_city_list.plist */; };
-		D7B09ACF1CDC43C200938327 /* city2.list.json in Resources */ = {isa = PBXBuildFile; fileRef = D7B09ACD1CDC43C100938327 /* city2.list.json */; };
 		D7D787321CFCA629001936A1 /* CityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D787311CFCA629001936A1 /* CityListViewController.m */; };
 		D7D787361CFCA69C001936A1 /* CityInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D787351CFCA69C001936A1 /* CityInfoCell.m */; };
 		D7EA53391CD7007C0068872B /* FailedLongPressView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EA53381CD7007C0068872B /* FailedLongPressView.m */; };
@@ -228,6 +226,8 @@
 		D7291B4D1CCE491C00901485 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 		D7291B4F1CCE5AE000901485 /* AFNetworkActivityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityLogger.h; sourceTree = "<group>"; };
 		D7291B501CCE5AE000901485 /* AFNetworkActivityLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityLogger.m; sourceTree = "<group>"; };
+		D729FC4E1D73473D001820FB /* Debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Debug.h; sourceTree = "<group>"; };
+		D729FC501D7354DE001820FB /* weather.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = weather.db; sourceTree = "<group>"; };
 		D731790D1D60D5830028DBD6 /* MWHeWeatherClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWHeWeatherClient.h; sourceTree = "<group>"; };
 		D731790E1D60D5830028DBD6 /* MWHeWeatherClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWHeWeatherClient.m; sourceTree = "<group>"; };
 		D73179101D60DEBC0028DBD6 /* https.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = https.cer; sourceTree = SOURCE_ROOT; };
@@ -328,7 +328,6 @@
 		D742D4C01CC613CF00398B26 /* Coordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Coordinate.m; sourceTree = "<group>"; };
 		D759B0C41CC92D1C00D1BB93 /* GetCurrentData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCurrentData.h; sourceTree = "<group>"; };
 		D759B0C51CC92D1C00D1BB93 /* GetCurrentData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetCurrentData.m; sourceTree = "<group>"; };
-		D75C6AB91CDCFF970031878E /* city_name_convert.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = city_name_convert.json; sourceTree = "<group>"; };
 		D75C6ABB1CDD017E0031878E /* CityDbData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityDbData.h; sourceTree = "<group>"; };
 		D75C6ABC1CDD017E0031878E /* CityDbData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityDbData.m; sourceTree = "<group>"; };
 		D75C707F1CCBC41300018444 /* Weather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Weather.h; sourceTree = "<group>"; };
@@ -347,8 +346,6 @@
 		D77634F81D5C4FD40030F18F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D77634FA1D5C4FE40030F18F /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		D77634FC1D5C4FF10030F18F /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		D77BB1451D62E8EC0022CBC6 /* he_city_list.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = he_city_list.plist; sourceTree = "<group>"; };
-		D7B09ACD1CDC43C100938327 /* city2.list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = city2.list.json; sourceTree = "<group>"; };
 		D7D787301CFCA629001936A1 /* CityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityListViewController.h; sourceTree = "<group>"; };
 		D7D787311CFCA629001936A1 /* CityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityListViewController.m; sourceTree = "<group>"; };
 		D7D787341CFCA69C001936A1 /* CityInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityInfoCell.h; sourceTree = "<group>"; };
@@ -558,6 +555,7 @@
 		D73B4E1C1CC3C4490091DC4A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D729FC501D7354DE001820FB /* weather.db */,
 				D713A5C11D6595FE009A35F6 /* Localizable.strings */,
 				D73179101D60DEBC0028DBD6 /* https.cer */,
 				D73B4E251CC3C4490091DC4A /* Main.storyboard */,
@@ -699,6 +697,7 @@
 				D73B4E951CC3C7490091DC4A /* NSMutableAttributedString+setAttributes.h */,
 				D73B4E961CC3C7490091DC4A /* NSMutableAttributedString+setAttributes.m */,
 				D73B4E971CC3C7490091DC4A /* Categories.h */,
+				D729FC4E1D73473D001820FB /* Debug.h */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -744,9 +743,6 @@
 		D75C6ABE1CDD018D0031878E /*  CityDB */ = {
 			isa = PBXGroup;
 			children = (
-				D77BB1451D62E8EC0022CBC6 /* he_city_list.plist */,
-				D7B09ACD1CDC43C100938327 /* city2.list.json */,
-				D75C6AB91CDCFF970031878E /* city_name_convert.json */,
 				D75C6ABB1CDD017E0031878E /* CityDbData.h */,
 				D75C6ABC1CDD017E0031878E /* CityDbData.m */,
 			);
@@ -918,16 +914,14 @@
 				D713A5BE1D658EE5009A35F6 /* InfoPlist.strings in Resources */,
 				D73578101D3FE21500AB170D /* LocatedCityCell.xib in Resources */,
 				D73179111D60DEBC0028DBD6 /* https.cer in Resources */,
-				D75C6ABA1CDCFF970031878E /* city_name_convert.json in Resources */,
 				D73B4EB51CC3C7F00091DC4A /* Lato-Bold.ttf in Resources */,
 				D73B4EB61CC3C7F00091DC4A /* Lato-Thin.ttf in Resources */,
 				D73B4EB71CC3C7F00091DC4A /* Lato-Light.ttf in Resources */,
 				D73B4EB81CC3C7F00091DC4A /* Lato-ThinItalic.ttf in Resources */,
+				D729FC511D7354DE001820FB /* weather.db in Resources */,
 				D73B4EB91CC3C7F00091DC4A /* Weather&Time.ttf in Resources */,
 				D73B4E2C1CC3C4490091DC4A /* LaunchScreen.storyboard in Resources */,
 				D73578181D405FB000AB170D /* CityCell.xib in Resources */,
-				D77BB1461D62E8EC0022CBC6 /* he_city_list.plist in Resources */,
-				D7B09ACF1CDC43C200938327 /* city2.list.json in Resources */,
 				D73B4E291CC3C4490091DC4A /* Assets.xcassets in Resources */,
 				D73B4E271CC3C4490091DC4A /* Main.storyboard in Resources */,
 			);
@@ -1256,6 +1250,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -1301,6 +1296,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

@@ -193,7 +193,7 @@
 
     } completion:^(BOOL finished) {
         if (!finished) {
-            [self ToAnimationStartState];
+            [self ToAnimationMidState];
         }
     }];
     
@@ -207,7 +207,7 @@
         [self ToAnimationEndState];
     } completion:^(BOOL finished) {
         if (!finished) {
-            [self ToAnimationMidState];
+            [self ToAnimationEndState];
         }
     }];
     

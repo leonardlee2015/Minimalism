@@ -46,7 +46,7 @@
 
 
     // 初始化数据库。
-    [[CityDbData shareCityDbData] initializationDB];
+    [CityDbData shareCityDbData];
 
 #ifdef UM_OPEN
     // 注册友盟分享

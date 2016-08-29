@@ -436,11 +436,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaherTests/MyWheaherTests.m"
-            timestampString = "493143915.056389"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "427"
-            endingLineNumber = "427"
+            startingLineNumber = "440"
+            endingLineNumber = "440"
             landmarkName = "-MWWeatherClient:didUpdateSucessFailWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -452,11 +452,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaherTests/MyWheaherTests.m"
-            timestampString = "493143915.056389"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "439"
-            endingLineNumber = "439"
+            startingLineNumber = "452"
+            endingLineNumber = "452"
             landmarkName = "-GetHeForcastWeather:didUpdateSucessWithData:"
             landmarkType = "5">
          </BreakpointContent>
@@ -516,11 +516,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaherTests/MyWheaherTests.m"
-            timestampString = "493143915.056389"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "432"
-            endingLineNumber = "432"
+            startingLineNumber = "445"
+            endingLineNumber = "445"
             landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
             landmarkType = "5">
          </BreakpointContent>
@@ -564,11 +564,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaher/CityDbData.m"
-            timestampString = "493064090.354564"
+            timestampString = "494049180.683053"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
+            startingLineNumber = "276"
+            endingLineNumber = "276"
             landmarkName = "-initializationDB"
             landmarkType = "5">
          </BreakpointContent>
@@ -580,11 +580,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaher/CityDbData.m"
-            timestampString = "493064090.354564"
+            timestampString = "494049180.683053"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "352"
-            endingLineNumber = "352"
+            startingLineNumber = "381"
+            endingLineNumber = "381"
             landmarkName = "-requestHeWeatherCNCityByPinyin:"
             landmarkType = "5">
          </BreakpointContent>
@@ -628,11 +628,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaher/CityDbData.m"
-            timestampString = "493064090.354564"
+            timestampString = "494049180.683053"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "-initialHeCityData"
             landmarkType = "5">
             <Locations>
@@ -708,7 +708,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaher/WeatherViewController.m"
-            timestampString = "493205134.901072"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "298"
@@ -788,11 +788,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaherTests/MyWheaherTests.m"
-            timestampString = "493143915.056389"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "384"
-            endingLineNumber = "384"
+            startingLineNumber = "397"
+            endingLineNumber = "397"
             landmarkName = "-MWWeatherClient:didUpdateSucessWithWeatherData:type:"
             landmarkType = "5">
          </BreakpointContent>
@@ -804,11 +804,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaherTests/MyWheaherTests.m"
-            timestampString = "493141677.035571"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "370"
-            endingLineNumber = "370"
+            startingLineNumber = "383"
+            endingLineNumber = "383"
             landmarkName = "-MWWeatherClient:didUpdateSucessWithWeatherData:type:"
             landmarkType = "5">
          </BreakpointContent>
@@ -930,11 +930,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaherTests/MyWheaherTests.m"
-            timestampString = "493144065.852604"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "394"
-            endingLineNumber = "394"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
             landmarkName = "-MWWeatherClient:didUpdateSucessWithWeatherData:type:"
             landmarkType = "5">
          </BreakpointContent>
@@ -946,11 +946,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyWheaherTests/MyWheaherTests.m"
-            timestampString = "493144114.756476"
+            timestampString = "494064308.525716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "402"
-            endingLineNumber = "402"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
             landmarkName = "-MWWeatherClient:didUpdateSucessWithWeatherData:type:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1128,6 +1128,70 @@
             startingLineNumber = "132"
             endingLineNumber = "132"
             landmarkName = "-setWheatherCode:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyWheaher/CityDbData.m"
+            timestampString = "493981074.416112"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "-init"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyWheaher/WeatherViewController.m"
+            timestampString = "494064308.525716"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
+            landmarkName = "-delayRequstDataByCoordinate:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyWheaher/WeatherViewController.m"
+            timestampString = "494098023.490196"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "356"
+            endingLineNumber = "356"
+            landmarkName = "-delayRequstDataByCoordinate:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyWheaher/WeatherViewController.m"
+            timestampString = "494126940.739444"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "352"
+            endingLineNumber = "352"
+            landmarkName = "-delayRequstDataByCoordinate:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

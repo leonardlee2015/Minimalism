@@ -2,9 +2,9 @@ Minimalism
 ======
 Minimalism是一个直观的天气应用，Minimalism以动画的形式显示温度、湿度、日出日落时间等天气信息，可查看未来6的天气预报，支持多城市天气显示和搜索，可查询国内2567个城市+国际5万城市的天气信息。
 #Screen Shot
-![](https://github.com/leonardlee2015/Minimalism/blob/master/snapshot/start2.gif)<br>
-![](https://github.com/leonardlee2015/Minimalism/blob/master/snapshot/CityManager.gif)<br>
-![](https://github.com/leonardlee2015/Minimalism/blob/master/snapshot/forecast2.gif)
+![](https://github.com/leonardlee2015/MyWheather/blob/master/snapshot/start2.gif)<br>
+![](https://github.com/leonardlee2015/MyWheather/blob/master/snapshot/CityManager.gif)<br>
+![](https://github.com/leonardlee2015/MyWheather/blob/master/snapshot/forecast2.gif)
 #Installation
 ```bash
 cd MyWheaher

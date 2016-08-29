@@ -72,11 +72,19 @@
     
     [self pop_addAnimation:animation forKey:@"titleShowAnimationKey"];
     
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         self.alpha = 1.0f;
-                     }];
-    
+
+
+    [UIView animateWithDuration:duration animations:^{
+        self.alpha = 1.0f;
+
+    } completion:^(BOOL finished) {
+        // 如果因为
+        if (!finished) {
+            self.alpha = 1.0f;
+
+        }
+    }];
+
     [super showByDuration:duration delay:delay];
 }
 -(void)hideByDuration:(CGFloat)duration delay:(CGFloat)delay{

@@ -12,6 +12,7 @@
 #import <FMDB.h>
 #import "MWHeWeatherClient.h"
 
+
 static NSString * const ImportCityDataFlag = @"LadCityDataFlag";
 static NSString * const ImportCityConvertFlag = @"Import City Convert Flag";
 static NSString * const ImportCityListFlag = @"Import City List Flag";
@@ -42,6 +43,32 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 -(instancetype)init{
     self = [super init];
     if (self) {
+        self.dbPath = [self createDcoumentsPath:@"weather.db"];
+
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+
+        if (![fileManager fileExistsAtPath:self.dbPath]) {
+            NSString *srcPath = [[NSBundle mainBundle]pathForResource:@"weather" ofType:@"db"];
+
+            NSError *error ;
+            [fileManager copyItemAtPath:srcPath toPath:self.dbPath error:&error];
+
+            if (error) {
+                NSString *msg =[NSString stringWithFormat:@"move weather.db from %@ to %@ failed.", srcPath, self.dbPath];
+                [NSException exceptionWithName:NSInternalInconsistencyException reason:msg userInfo:nil];
+
+                return nil;
+            }
+
+
+
+
+
+
+
+        }
+        
+
         // 获取数据库路径
         self.dbPath = [self createDcoumentsPath:@"weather.db"];
         self.db = [FMDatabase databaseWithPath:self.dbPath];
@@ -139,6 +166,8 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 
 }
 -(void)initializationDB{
+
+
     // 获取是否已经导入数据标识。
 
     __block BOOL isImportCityData = [[[NSUserDefaults standardUserDefaults]valueForKey:ImportCityDataFlag] boolValue];
@@ -442,6 +471,34 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     return city;
 }
 
+-(City *)requestCityByZHCityName:(NSString *)ZHname provinceName:(NSString *)provinceName{
+    City *city = [City new];
+
+    if (![_db open]) {
+        DLog(@"open db failed: %@",[_db lastErrorMessage]);
+        return nil;
+    }
+
+    NSString *sql = @"SELECT  CN_CITY_INFO.name as name,pinyin,OPEN_WEATHER_CITY_IFNO.id an id,country  from CN_CITY_INFO,OPEN_WEATHER_CITY_IFNO  WHERE CN_CITY_INFO.NAME = ? AND PROVINCE = ? AND OPEN_WEATHER_CITY_IFNO.name = pinyin COLLATE NOCASE";
+
+    FMResultSet *result = [_db executeQuery:sql, ZHname, provinceName];
+
+    if (!result) {
+        DLog(@"query data failed : %@", [_db lastErrorMessage]);
+        return nil;
+    }
+
+    if ([result next]) {
+        city.cityId = [result stringForColumn:@"id"];
+        city.cityName = [result stringForColumn:@"pinyin"];
+        city.ZHCityName = [result stringForColumn:@"name"];
+        city.country = [result stringForColumn:@"country"];
+    }
+
+    return city;
+
+}
+
 -(City *)requestHeWeatherCityByName:(NSString *)name{
     City *city = [City new];
 
@@ -466,6 +523,35 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     }
 
     return city;
+}
+
+-(City *)requestHeWeatherCityByZHName:(NSString *)ZHName province:(NSString *)province{
+
+    City *city = [City new];
+
+    if (![_db open]) {
+        DLog(@"open db failed: %@",[_db lastErrorMessage]);
+        return nil;
+    }
+
+    NSString *sql = @"select * from CN_CITY_INFO WHERE NAME = ? AND province = ?";
+
+    FMResultSet *result = [_db executeQuery:sql, ZHName, province];
+
+    if (!result) {
+        DLog(@"query data failed : %@", [_db lastErrorMessage]);
+        return nil;
+    }
+
+    if ([result next]) {
+        city.cityId = [result stringForColumn:@"id"];
+        city.cityName = [result stringForColumn:@"pinyin"];
+        city.ZHCityName = [result stringForColumn:@"name"];
+        city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
+    }
+
+    return city;
+
 }
 
 -(NSArray<City *> *)searchHeCitiesByCondition:(NSString *)condition{
