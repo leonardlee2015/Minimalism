@@ -119,7 +119,7 @@
             [weakSlef.delegate weatherViewDidPressRightButton:weakSlef];
         }
     };
-
+    [_cityTitleView addHideLeftButtonGestruerToView:self];
     
     _iconView = [[WeatherIconView alloc]initWithFrame:CGRectMake(0, _cityTitleHeight, _subViewWidth, _subViewWidth)];
     [_baseView addSubview:_iconView];
@@ -209,7 +209,9 @@
     _showDownView = [[ShowDownView  alloc]initWithFrame:CGRectMake(0, 0, 30, 10)];
     _showDownView.center = CGPointMake(self.width/2, self.baseView.contentSize.height+20.f);
     [_baseView addSubview:_showDownView];
-        
+
+
+    // 添加 tab 取消按钮弹窗手势。
 
 
 }

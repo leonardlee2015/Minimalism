@@ -25,6 +25,7 @@ PODS:
   - SDWebImage/Core (3.8.1)
   - SWRevealTableViewCell (0.3.5)
   - UITableView+FDTemplateLayoutCell (1.4)
+  - UMengAnalytics (4.0.4)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1.0)
@@ -35,6 +36,7 @@ DEPENDENCIES:
   - SDWebImage (~> 3.8.1)
   - SWRevealTableViewCell (~> 0.3.5)
   - UITableView+FDTemplateLayoutCell (~> 1.4)
+  - UMengAnalytics
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -45,7 +47,8 @@ SPEC CHECKSUMS:
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
   SWRevealTableViewCell: c97ca17df7153f2f130f307ea90399d4b19e4e15
   UITableView+FDTemplateLayoutCell: 234e1582bcc4e18461af91155123bb96538ed030
+  UMengAnalytics: 4ed421fb3bca63b26fc13c947743cabf3831d199
 
-PODFILE CHECKSUM: 569eb4e94b75a003b3b9c727990bf3ef6b98574b
+PODFILE CHECKSUM: a75678477f8ce2efc083910d6c9a7a7790e54b05
 
 COCOAPODS: 1.0.1

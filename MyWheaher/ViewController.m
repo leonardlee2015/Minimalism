@@ -10,7 +10,9 @@
 #import "WeatherViewController.h"
 #import "CityListViewController.h"
 #import "MWHeWeatherClient.h"
+#import "Analysitcs.h"
 #import <FLKAutoLayout.h>
+
 
 NSString *const didChangedCityHanderIdentifier = @"weatherView did change handler id";
 NSString *const didremoveCityHanderIdentifier = @"weatherView did remove handler id";
@@ -43,6 +45,20 @@ NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler
 
 
 
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self scrollViewDidEndScrollingAnimation:self.contentView];
+
+    [MobClick beginLogPageView:@"Root View Controller"];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+
+    [MobClick endLogPageView:@"Root View Controller"];
 }
 
 -(void)initializeCityManagerHandlers{
@@ -140,7 +156,6 @@ NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler
         [self addChildViewController:weatherVC];
     }
 }
-
 -(void)initializePageControl{
     _pageControl = [[UIPageControl alloc]init];
     _pageControl.userInteractionEnabled = NO;
@@ -183,10 +198,18 @@ NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler
 }
 
 -(IBAction)pressMenu:(id)sender{
-    CityListViewController *vc = [[CityListViewController alloc]init];
-    [self presentViewController:vc animated:YES completion:^{
 
-    }];
+    // present CityListViewController
+    CityListViewController *vc = [[CityListViewController alloc]init];
+
+    [self presentViewController:vc animated:YES completion:nil];
+
+    // 发送统计信息。
+    if (sender == self.requstingMenu) {
+        [MobClick event:RequestingEnterCityMangerID];
+    }else{
+        [MobClick event:RequestFailedEnterCityManagerID];
+    }
 }
 
 
@@ -197,13 +220,7 @@ NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler
     [self.cityManager removeDidSelectCityHandlerByIdentifier:didselectCityHanderIdentifier];
     [self.cityManager removeDidChangedCityHandlerByIdentifier:didChangedCityHanderIdentifier];
 }
--(void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-}
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [self scrollViewDidEndScrollingAnimation:self.contentView];
-}
+
 - (void)didReceiveMemoryWarning {
 
     [super didReceiveMemoryWarning];
@@ -242,7 +259,11 @@ NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler
 
 }
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+
     [self scrollViewDidEndScrollingAnimation:scrollView];
+
+    // 发送统计信息。
+    [MobClick event:SwipeChangeShowCityID];
 }
 
 #pragma mark - WeatherViewControllerDelegate

@@ -10,7 +10,7 @@ pod 'FLKAutoLayout', '~>1.0.0'
 pod 'FMDB', '~>2.6.2'
 #pod 'UMengSocialCOM', '~> 5.2.1'
 pod 'SDWebImage' ,'~>3.8.1'
-
+pod 'UMengAnalytics'
 target 'MyWheaher' do
 pod 'UITableView+FDTemplateLayoutCell' ,'~> 1.4'
 pod 'SWRevealTableViewCell', '~> 0.3.5'

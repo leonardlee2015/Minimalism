@@ -258,8 +258,13 @@
     [self showLeftView];
 }
 
--(void)hideButtunItems{
-    [self hideLeftViewimmediately];
+
+-(void)hideButtunItems:(BOOL)animated{
+    if (animated) {
+        [self hidenLeftView];
+    }else{
+        [self hideLeftViewimmediately];
+    }
 }
 
 -(void)showByDuration:(CGFloat)duration delay:(CGFloat)delay{

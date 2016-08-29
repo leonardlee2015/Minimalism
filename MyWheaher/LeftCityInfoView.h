@@ -11,5 +11,5 @@
 @interface LeftCityInfoView : BaseWheatherView
 -(void)addButtonItemWithImage:(nonnull UIImage*)image HeightLightImage:(nullable UIImage*)heightLightImage backgroundColor:(nullable UIColor*)color target:(nonnull id)target action:(nonnull SEL)selector;
 
--(void)hideButtunItems;
+-(void)hideButtunItems:(BOOL)animated;
 @end

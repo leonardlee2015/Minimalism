@@ -22,6 +22,7 @@
 
 
 #import "AppDelegate.h"
+#import "Analysitcs.h"
 #ifdef UM_OPEN
 
 #import <UMSocialControllerService.h>
@@ -126,12 +127,18 @@ GetCurrentDataDelegate
     // [self setNeedsStatusBarAppearanceUpdate];
 
 }
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
 
+    [MobClick beginLogPageView:@"Weather View Controller"];
 }
 
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+
+    [MobClick endLogPageView: @"Weather View Controller"];
+}
 // 隐藏status bar.
 /*
  -(UIStatusBarStyle)preferredStatusBarStyle{
@@ -249,10 +256,23 @@ GetCurrentDataDelegate
             [self showFailedView];
         });
 
+
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             // @"Failed to locate!" ,@"Please turn on your Locations Service."
             [[TWMessageBarManager sharedInstance]showMessageWithTitle:NSLocalizedString(@"LCErrTitle1", @"Failed to locate")description:NSLocalizedString(@"LCErrMsg1", @"Please turn on your Locations Service.")  type:TWMessageBarMessageTypeError];
         });
+
+        // 发送统计信息。
+        NSString *errMsg = [error localizedDescription];
+
+        if (errMsg) {
+            NSDictionary *attributes = @{@"ErrMsg": errMsg };
+            [MobClick event:LocationDidNotOpenID attributes:attributes];
+        }else{
+            [MobClick endEvent:LocationDidNotOpenID];
+        }
+
+
 
     }else{
 
@@ -269,6 +289,17 @@ GetCurrentDataDelegate
              type:TWMessageBarMessageTypeError];
         });
 
+
+        // 发送统计信息。
+        NSString *errMsg = [error localizedDescription];
+
+        if (errMsg) {
+            NSDictionary *attributes = @{@"ErrMsg": errMsg };
+            [MobClick event:LocationFailedID attributes:attributes];
+        }else{
+            [MobClick endEvent:LocationFailedID];
+        }
+
     }
 
 
@@ -281,16 +312,16 @@ GetCurrentDataDelegate
 
 
     CLGeocoder *coder = [CLGeocoder new];
-    City *locationCity = [CityManager shareManager].locatedCity;
 
     static BOOL enableRequstWeather = YES;
 
 
     // 强制是系统语言环境设置为英文，获取英文城市名称。
-    NSMutableArray *userDefultLanguage = [[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"];
     //#define test
 #ifndef test
 #if 0
+    NSMutableArray *userDefultLanguage = [[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"];
+
     [[NSUserDefaults standardUserDefaults]setObject:[NSArray arrayWithObjects:@"en-US", nil] forKey:@"AppleLanguages"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
@@ -317,6 +348,19 @@ GetCurrentDataDelegate
                  type:TWMessageBarMessageTypeError];
             });
 
+
+
+            // 发送统计信息。
+            NSString *errMsg = [error localizedDescription];
+
+            if (errMsg) {
+                NSDictionary *attributes = @{@"ErrMsg": errMsg };
+                [MobClick event:DecoderLocationFailedID attributes:attributes];
+            }else{
+                [MobClick endEvent:DecoderLocationFailedID];
+            }
+
+
         }else{
 
             CLPlacemark *mark  = placemarks.firstObject;
@@ -336,6 +380,7 @@ GetCurrentDataDelegate
 
                     [self showFailedView];
 
+
                 });
 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -346,6 +391,16 @@ GetCurrentDataDelegate
                      type:TWMessageBarMessageTypeError];
                 });
 
+
+                // 发送统计信息。
+                NSString *errMsg = [error localizedDescription];
+
+                if (errMsg) {
+                    NSDictionary *attributes = @{@"ErrMsg": errMsg };
+                    [MobClick event:DecoderLocationFailedID attributes:attributes];
+                }else{
+                    [MobClick endEvent:DecoderLocationFailedID];
+                }
 
             }else if (isUsingHeWeatherData) {
 
@@ -484,6 +539,17 @@ GetCurrentDataDelegate
 
     [self showError];
 
+    // 发送统计信息。
+    NSString *errMsg = [error localizedDescription];
+
+    if (errMsg) {
+        NSDictionary *attributes = @{@"ErrMsg": errMsg };
+        [MobClick event:RequestWeatherDataFailedID attributes:attributes];
+    }else{
+        [MobClick endEvent:RequestWeatherDataFailedID];
+    }
+
+
 }
 -(void)showError{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -508,6 +574,16 @@ GetCurrentDataDelegate
 
 
     [self showError];
+
+    // 发送统计信息。
+    NSString *errMsg = [error localizedDescription];
+
+    if (errMsg) {
+        NSDictionary *attributes = @{@"ErrMsg": errMsg };
+        [MobClick event:RequestWeatherDataFailedID attributes:attributes];
+    }else{
+        [MobClick endEvent:RequestWeatherDataFailedID];
+    }
 }
 
 -(void)GetHeWeatherData:(nonnull GetHeWeatherData*)getData getDataSuccessWithWeatherData:(nonnull CurrentWeatherData *)weatherData{
@@ -538,6 +614,10 @@ GetCurrentDataDelegate
 -(void)weatherViewPullUp:(WeatherView *)weatherView{
 
     [self requestWeatheData];
+
+    // 发送统计信息。
+    [MobClick event:DragDownRequestWeatherDataID];
+
     //[_locationManager requestLocation];
     //[self getLocationAndFadeView];
 
@@ -563,7 +643,7 @@ GetCurrentDataDelegate
 -(void)weatherViewDidPressMoreItem:(WeatherView *)weatherView{
     CityListViewController *vc = [[CityListViewController alloc]init];
     [self presentViewController:vc animated:YES completion:^{
-
+        [MobClick event:NormalEnterCityMangerID];
     }];
 }
 
@@ -632,6 +712,9 @@ GetCurrentDataDelegate
     
     [_failLongPressView hide];
     [self requestWeatheData];
+
+    // 发送统计信息。
+    [MobClick event:LongPressRequestWeatherDataID];
 }
 
 #pragma mark - Properties

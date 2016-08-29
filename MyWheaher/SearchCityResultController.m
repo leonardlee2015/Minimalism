@@ -9,7 +9,7 @@
 #import "SearchCityResultController.h"
 #import "City.h"
 #import "SearchCityData.h"
-
+#import "Analysitcs.h"
 
 @interface SearchCityResultController ()<UITableViewDelegate, UITableViewDataSource>
 @property(nonnull, nonatomic, readonly)UITableView *tableView;
@@ -26,6 +26,19 @@ static NSString *const ResultCellID = @"result cell";
     self.tableView.dataSource = self;
 
 }
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+
+    [MobClick beginLogPageView:@"Search City Result View Controller"];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+
+    [MobClick endLogPageView:@"Search City Result View Controller"];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

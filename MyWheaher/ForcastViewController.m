@@ -15,6 +15,7 @@
 #import "GetHeForcastWeatherData.h"
 #import "ForcastWeatherData.h"
 #import "CityDbData.h"
+#import "Analysitcs.h"
 
 NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Controller Notification";
 
@@ -72,6 +73,21 @@ NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Control
     self.showDownView.y      = -30.f;
     [self.tableView addSubview:self.showDownView];
 }
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+
+    [MobClick beginLogPageView:@"City List View Controller"];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+
+    [MobClick endLogPageView:@"City List View Controller"];
+}
+
+
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:YES];
 
@@ -304,12 +320,29 @@ NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Control
 
 }
 -(void)GetForcastWeatherData:(GetForcastWeatherData *)getData didUpdateFailWithError:(NSError *)error{
-    
-}
+    // 发送统计信息。
+    NSString *errMsg = [error localizedDescription];
+
+    if (errMsg) {
+        NSDictionary *attributes = @{@"ErrMsg": errMsg };
+        [MobClick event:RequestWeatherDataFailedID attributes:attributes];
+    }else{
+        [MobClick endEvent:RequestWeatherDataFailedID];
+    }}
 
 #pragma mark - GetHeForcastWeatherDataDelegate
 
 -(void)GetHeForcastWeather:(GetHeForcastWeatherData *)getData didUpdateFailWithError:(NSError *)error{
+
+    // 发送统计信息。
+    NSString *errMsg = [error localizedDescription];
+
+    if (errMsg) {
+        NSDictionary *attributes = @{@"ErrMsg": errMsg };
+        [MobClick event:RequestWeatherDataFailedID attributes:attributes];
+    }else{
+        [MobClick endEvent:RequestWeatherDataFailedID];
+    }
 
 }
 -(void)GetHeForcastWeather:(GetHeForcastWeatherData *)getData didUpdateSucessWithData:(ForcastWeatherData *)weatherData{

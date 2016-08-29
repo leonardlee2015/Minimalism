@@ -16,6 +16,7 @@
 #import "ForcastWeatherData.h"
 #import "CityDbData.h"
 #import "WeatherNumberMeaningTransform.h"
+#import "Analysitcs.h"
 
 #import <SDWebImage/SDWebImageManager.h>
 NSString *const ADDKey = @"add";
@@ -139,7 +140,9 @@ NSString *const ADDKey = @"add";
 
 -(void)testNSDictionary{
     NSDictionary *dic = @{
-                          @"key":@"key"
+                          @"key":@"key",
+                          @"cnt":[NSNull null]
+
                           };
     NSUInteger cnt = [dic[@"cnt"] integerValue];
     
@@ -357,6 +360,21 @@ NSString *const ADDKey = @"add";
     BOOL result = resultArray.count>0 ? YES: NO;
 
     XCTAssert(result , @"test predicate failed");
+}
+
+-(void)testUM{
+    Class cls = NSClassFromString(@"UMANUtil");
+    SEL deviceIDSelector = @selector(openUDIDString);
+    NSString *deviceID = nil;
+    if(cls && [cls respondsToSelector:deviceIDSelector]){
+        deviceID = [cls performSelector:deviceIDSelector];
+    }
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:@{@"oid" : deviceID}
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:nil];
+
+    NSLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+
 }
 #pragma mark - delegate
 

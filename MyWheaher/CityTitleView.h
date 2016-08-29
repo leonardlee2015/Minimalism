@@ -23,4 +23,6 @@ typedef void(^RightButtonHandler)();
 @property(nonatomic,nonnull,copy)ShareItemHandler shareItemHandler;
 @property(nonatomic,nonnull,copy)RightButtonHandler rightButtonHandler;
 
+
+-(void)addHideLeftButtonGestruerToView:(nonnull UIView*)view;
 @end

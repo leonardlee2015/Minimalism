@@ -346,6 +346,7 @@
 		D77634F81D5C4FD40030F18F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D77634FA1D5C4FE40030F18F /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		D77634FC1D5C4FF10030F18F /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		D7AC22071D743A1F002CED4F /* Analysitcs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analysitcs.h; sourceTree = "<group>"; };
 		D7D787301CFCA629001936A1 /* CityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityListViewController.h; sourceTree = "<group>"; };
 		D7D787311CFCA629001936A1 /* CityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityListViewController.m; sourceTree = "<group>"; };
 		D7D787341CFCA69C001936A1 /* CityInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityInfoCell.h; sourceTree = "<group>"; };
@@ -536,6 +537,7 @@
 		D73B4E1B1CC3C4490091DC4A /* MyWheaher */ = {
 			isa = PBXGroup;
 			children = (
+				D7AC22051D743870002CED4F /* umeng */,
 				D75C6ABE1CDD018D0031878E /*  CityDB */,
 				D7EA53401CD70C490068872B /* TWMessageBarManager */,
 				D742D4BD1CC5F79400398B26 /* Networking */,
@@ -747,6 +749,14 @@
 				D75C6ABC1CDD017E0031878E /* CityDbData.m */,
 			);
 			name = " CityDB";
+			sourceTree = "<group>";
+		};
+		D7AC22051D743870002CED4F /* umeng */ = {
+			isa = PBXGroup;
+			children = (
+				D7AC22071D743A1F002CED4F /* Analysitcs.h */,
+			);
+			name = umeng;
 			sourceTree = "<group>";
 		};
 		D7D7872F1CFC9F3D001936A1 /* ForcastViewController */ = {

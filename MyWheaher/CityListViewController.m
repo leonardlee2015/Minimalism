@@ -19,7 +19,7 @@
 #import "CurrentWeatherData.h"
 #import "GetHeWeatherData.h"
 #import "CityDbData.h"
-
+#import "Analysitcs.h"
 
 #import "TWMessageBarManager.h"
 #import <objc/runtime.h>
@@ -95,6 +95,9 @@ GetHeWeatherDataDelegate
             
             [weakSlef.tableView reloadData];
             [weakSlef requestAllCityWeatherData];
+
+
+
         }
 
     } withIdentifier:ChangedCityHandlerIdentifier];
@@ -117,6 +120,8 @@ GetHeWeatherDataDelegate
         
         [weakSlef.cityManger addCity:city];
         weakSlef.searchController.active = NO;
+
+        [MobClick event:AddCityID];
     };
 
     _searchResultController.didRollViewHandler = ^(){
@@ -331,7 +336,16 @@ GetHeWeatherDataDelegate
 }
 
 -(void)searchCityData:(SearchCityData *)searchCityData didUpdateFailWithError:(NSError *)error{
-    
+
+    // 发送统计信息。
+    NSString *errMsg = [error localizedDescription];
+
+    if (errMsg) {
+        NSDictionary *attributes = @{@"ErrMsg": errMsg };
+        [MobClick event:RequestWeatherDataFailedID attributes:attributes];
+    }else{
+        [MobClick endEvent:RequestWeatherDataFailedID];
+    }
 }
 
 #pragma mark - GetCurrentDataDelegate
@@ -356,6 +370,16 @@ GetHeWeatherDataDelegate
 
 -(void)GetCurrentData:(GetCurrentData *)getData getDataFailWithError:(NSError *)error{
     [self showError];
+
+    // 发送统计信息。
+    NSString *errMsg = [error localizedDescription];
+
+    if (errMsg) {
+        NSDictionary *attributes = @{@"ErrMsg": errMsg };
+        [MobClick event:RequestWeatherDataFailedID attributes:attributes];
+    }else{
+        [MobClick endEvent:RequestWeatherDataFailedID];
+    }
 
 }
 
@@ -411,6 +435,9 @@ GetHeWeatherDataDelegate
             [weakSlef.tableView beginUpdates];
             [weakSlef.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [weakSlef.tableView endUpdates];
+
+
+            [MobClick event:RemoveCityID];
 
         }
         return  YES;

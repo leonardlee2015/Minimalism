@@ -61,6 +61,8 @@
         _rightViewAnimationState = [WheatherViewAnimationState new];
 
         
+
+        
     }
     return self;
 }
@@ -164,15 +166,24 @@
     
     
 }
+-(void)addHideLeftButtonGestruerToView:(UIView *)view{
+    UITapGestureRecognizer *tabGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideLeftView:)];
 
+    [view addGestureRecognizer:tabGesture];
+}
+
+-(IBAction)hideLeftView:(id)sender{
+    [_leftView hideButtunItems:YES];
+
+}
 -(IBAction)callMoreItem:(id)sender{
-    [_leftView hideButtunItems];
+    [_leftView hideButtunItems:NO];
     if (self.moreItemHandler) {
         self.moreItemHandler();
     }
 }
 -(IBAction)callShareItem:(id)sender{
-    [_leftView hideButtunItems];
+    [_leftView hideButtunItems:NO];
     if (self.shareItemHandler) {
         self.shareItemHandler();
     }

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "AFNetworkActivityLogger.h"
 #import "CityDBData.h"
+#import <UMMobClick/MobClick.h>
 /*
  #import <UMSocial.h>
 #import <UMSocialWechatHandler.h>
@@ -48,6 +49,8 @@
     // 初始化数据库。
     [CityDbData shareCityDbData];
 
+    // 注册友盟统计
+    [self registerUMAnalystics];
 #ifdef UM_OPEN
     // 注册友盟分享
     [UMSocialData setAppKey:UMAPPKey];
@@ -74,7 +77,18 @@
     return YES;
 }
 
+/**
+ *   注册友盟统计。
+ */
+-(void)registerUMAnalystics{
+    UMConfigInstance.appKey = UMAPPKey;
+    UMConfigInstance.channelId = @"App Store";
 
+    [MobClick startWithConfigure:UMConfigInstance];
+
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    [MobClick setAppVersion:version];
+}
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
