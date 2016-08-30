@@ -59,8 +59,7 @@
 
     // set city label;
     if (!city.cityName) {
-        self.CityLabel.text = city.cityName;
-        self.CityLabel.text = @"厦门";
+        self.CityLabel.text = @"NULL";
 
     }else if([city.country isEqualToString:@"CN"]   ){
         self.CityLabel.text = city.ZHCityName;
@@ -70,10 +69,10 @@
     }
 
     if (!city.temperature) {
-        _TemperatureLabel.text = @"°C";
+        _TemperatureLabel.text = @"20°";
 
     }else{
-        _TemperatureLabel.text = [NSString stringWithFormat:@"%ld°" , [city.temperature integerValue]];
+        _TemperatureLabel.text = [NSString stringWithFormat:@"%d°" , [city.temperature integerValue]];
     }
 
 

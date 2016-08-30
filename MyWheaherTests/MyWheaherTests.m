@@ -375,6 +375,15 @@ NSString *const ADDKey = @"add";
 
     NSLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
 
+    NSMutableArray *objects = [NSMutableArray arrayWithCapacity:0];
+
+    [objects addObject:[NSNull null]];
+
+    NSString *str = [objects firstObject];
+
+    XCTAssert([str isEqual:[NSNull null]] ,@"");
+
+
 }
 #pragma mark - delegate
 

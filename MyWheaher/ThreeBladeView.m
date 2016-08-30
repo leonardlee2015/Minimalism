@@ -13,6 +13,9 @@
 #import "ForcastViewController.h"
 
 
+#define POP_ANIMATION
+
+
 @interface ThreeBladeView (){
     BladeView *firstBladeView ;
     BladeView *secondBladeView;
@@ -93,7 +96,8 @@ static NSString *rotationKey = @"rotation";
 -(void)rotateBladeWithCirleByOneSecond{
 
     CGFloat  circleByOneSecond = _circleByOneSecond <= 0? 0.001: _circleByOneSecond;
-#define POP_ANIMATON
+
+
 #ifdef POP_ANIMATION
     // 启动一个不停止旋转的pop动画
 

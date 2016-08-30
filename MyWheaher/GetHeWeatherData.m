@@ -76,8 +76,12 @@
     _group = dispatch_group_create();
 
     for (NSString *cityId in cityIds) {
-        dispatch_group_enter(_group);
-        [self.client requestCityWeatherdataByID:cityId];
+        if (![cityId isEqual:[NSNull null]]) {
+            dispatch_group_enter(_group);
+            [self.client requestCityWeatherdataByID:cityId];
+
+        }
+
     }
     //[self.client requestCityWeatherdataByID:cityIds[0]];
 

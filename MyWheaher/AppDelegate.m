@@ -41,10 +41,12 @@
     // Override point for customization after application launch.
 
     // 设置AFNetworking 网络活动监视器。
+#ifdef M_DEBUG
     [[AFNetworkActivityLogger sharedLogger]startLogging];
+    
     [AFNetworkActivityLogger sharedLogger].level = AFLoggerLevelDebug;
 
-
+#endif
 
     // 初始化数据库。
     [CityDbData shareCityDbData];

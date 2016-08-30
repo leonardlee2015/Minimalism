@@ -37,14 +37,15 @@
     return self;
 }
 
+
 -(void)buildView{
     _cycleView = [[CycleView alloc]initWithFrame:ScaleRectMake(45, 55, 115, 115)];
-    _cycleView.percent = self.Humidity;
+    _cycleView.percent = self.Humidity?self.Humidity:60;
     [self addSubview:_cycleView];
     [_cycleView buildView];
     
-    _numberView = [[NumberView alloc] initWithFrame:ScaleRectMake(35, 55, 115, 115)];
-    _numberView.number = self.Humidity;
+    _numberView = [[NumberView alloc] initWithFrame:ScaleRectMake(35, 55, 138, 138)];
+    _numberView.number = self.Humidity?self.Humidity:60;
     _numberView.delegate = self;
   
     [self addSubview:_numberView];
@@ -82,7 +83,7 @@
     _Humidity = Humidity;
     _cycleView.percent = Humidity;
     _numberView.number = Humidity;
-    
+
 }
 
 #pragma mark - NumberViewDelegate
@@ -106,7 +107,7 @@
     [AttributedStr addAttributes:@{
                                    NSFontAttributeName:[UIFont fontWithName:@"Avenir" size:19],
                                    NSForegroundColorAttributeName:[UIColor colorWithWhite:0.4 alpha:1],
-                                   NSBaselineOffsetAttributeName: @(10),
+                                   //NSBaselineOffsetAttributeName: @(10),
                                    NSParagraphStyleAttributeName:paragraph,
                                    }
                            range:PerRange];

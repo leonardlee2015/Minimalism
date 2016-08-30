@@ -9,9 +9,9 @@
 #ifndef Debug_h
 #define Debug_h
 
-#define DEBUG
+//#define M_DEBUG
 
-#ifdef DEBUG
+#ifdef M_DEBUG
 # define DLog(fmt, ...) NSLog(@"[%@ %@][Line %d] %@",[self class] ,NSStringFromSelector(_cmd), __LINE__, [NSString stringWithFormat:fmt,##__VA_ARGS__]);
 #else
 # define DLog(...)

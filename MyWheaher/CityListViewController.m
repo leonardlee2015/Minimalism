@@ -148,8 +148,9 @@ GetHeWeatherDataDelegate
     [addCityButton addTarget:self action:@selector(addNewCity:) forControlEvents:UIControlEventTouchUpInside];
 
     [footerView addSubview:addCityButton];
-    [addCityButton alignTop:@"22" bottom:@"-22" toView:footerView];
-    [addCityButton alignTrailingEdgeWithView:footerView predicate:@"-33"];
+    [addCityButton alignTop:@"8" bottom:@"-8" toView:footerView];
+    [addCityButton alignTrailingEdgeWithView:footerView predicate:@"-53"];
+    [addCityButton constrainWidth:@"58"];
 
     self.tableView.tableFooterView = footerView;
 
@@ -157,7 +158,10 @@ GetHeWeatherDataDelegate
 
 -(void)requestAllCityWeatherData{
     NSMutableArray *cityIDs = [NSMutableArray arrayWithCapacity:5];
-    [cityIDs addObject:self.cityManger.locatedCity.cityId];
+
+    NSString *locatedCityID = self.cityManger.locatedCity.cityId;
+
+    [cityIDs addObject:locatedCityID?locatedCityID:[NSNull null]];
 
     for (City *city in self.cityManger.citys) {
         [cityIDs addObject:city.cityId];

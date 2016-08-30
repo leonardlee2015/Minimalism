@@ -136,13 +136,14 @@
                      HeightLightImage:[UIImage imageNamed:@"main_weahter_view_menu_black"]
                       backgroundColor:color(74, 144, 226, 1)
                                target:self action:@selector(callMoreItem:)];
+    /*
     [_leftView addButtonItemWithImage:[UIImage imageNamed:@"share"]
                      HeightLightImage:[UIImage imageNamed:@"share_black"]
                       backgroundColor:color(211, 0, 0, 1)
                                target:self
                                action:@selector(callShareItem:)];
 
-
+     */
     [self addSubview:_leftView];
     [self bringSubviewToFront:_leftView];
     

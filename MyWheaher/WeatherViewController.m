@@ -233,7 +233,7 @@ GetCurrentDataDelegate
     CLLocation *location = [locations lastObject];
 
 
-    NSLog(@"定位成功:%@",location);
+    DLog(@"定位成功:%@",location);
 
     [CityManager shareManager].locatedCity.coordinate.lat = [NSString stringWithFormat:@"%f",location.coordinate.latitude];
     [CityManager shareManager].locatedCity.coordinate.lon = [NSString stringWithFormat:@"%f",location.coordinate.longitude];
@@ -250,7 +250,7 @@ GetCurrentDataDelegate
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     if ([CLLocationManager locationServicesEnabled] == NO) {
 
-        NSLog(@"定位失败，定位服务关闭！");
+        DLog(@"定位失败，定位服务关闭！");
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.weatherView hide];
             [self showFailedView];
@@ -276,7 +276,7 @@ GetCurrentDataDelegate
 
     }else{
 
-        NSLog(@"定位失败，未能定位当前位置！");
+        DLog(@"定位失败，未能定位当前位置！");
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self showFailedView];
         });
@@ -332,7 +332,7 @@ GetCurrentDataDelegate
         //NSLog(@"%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"]);
         if (error) {
 
-            NSLog(@"reverseGeocodeLocation:%@",[error localizedDescription]);
+            DLog(@"reverseGeocodeLocation:%@",[error localizedDescription]);
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 
                 [self showFailedView];
@@ -504,7 +504,6 @@ GetCurrentDataDelegate
 }
 #pragma mark - GetCurrentDataDelegate
 -(void)GetCurrentData:(GetCurrentData *)getData getDataSuccessWithWeatherData:(CurrentWeatherData *)weatherData{
-    NSLog(@"invole [%@ %@]",[self class], NSStringFromSelector(_cmd));
 
     if (weatherData) {
 
@@ -587,7 +586,6 @@ GetCurrentDataDelegate
 }
 
 -(void)GetHeWeatherData:(nonnull GetHeWeatherData*)getData getDataSuccessWithWeatherData:(nonnull CurrentWeatherData *)weatherData{
-    NSLog(@"invole [%@ %@]",[self class], NSStringFromSelector(_cmd));
 
     if (weatherData) {
 

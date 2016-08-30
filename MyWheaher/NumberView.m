@@ -10,6 +10,7 @@
 #import "NumberAnimation.h"
 
 #import <pop/POP.h>
+#import <FLKAutoLayout/FLKAutoLayout.h>
 
 @interface NumberView ()<NumberAnimationDelegate>
 @property (nonatomic,strong) UILabel *numberLabel;
@@ -46,16 +47,20 @@
 
     [self setNumberLabelNumber:self.number];
 
-    self.numberLabel.adjustsFontSizeToFitWidth = YES;
+    //self.numberLabel.adjustsFontSizeToFitWidth = YES;
     self.numberLabel.textColor = [UIColor blackColor];
     
     [self addSubview:self.numberLabel];
+#if 0
     self.numberLabel.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *numberLabelDic = @{@"numberLabel":self.numberLabel};
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[numberLabel]|" options:0 metrics:nil views:numberLabelDic]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[numberLabel]|" options:0 metrics:nil views:numberLabelDic]];
     //
+#endif
+
+    [_numberLabel alignToView:self];
     //[self.numberLabel sizeToFit];
       //[self layoutIfNeeded];
     NSLog(@"%f,%f,%f,%f",_numberLabel.x,self.y,_numberLabel.width,_numberLabel.height);
@@ -64,6 +69,10 @@
     self.animation.delegate = self;
     
     
+}
+-(void)layoutSubviews{
+    [super layoutSubviews];
+    _numberLabel.frame = self.bounds;
 }
 
 -(void)showByDuration:(CGFloat)duration delay:(CGFloat)delay{
@@ -103,6 +112,8 @@
 -(void)setNumberLabelNumber:(CGFloat)number{
     if (self.delegate && [self.delegate respondsToSelector:@selector(NumberView:accessNumber:)]) {
         self.numberLabel.attributedText = [self.delegate NumberView:self accessNumber:number];
+
+        [self setNeedsLayout];
         
         if (self.AdjustNumberSize) {
             self.size = [self.numberLabel sizeThatFits:self.numberLabel.size];

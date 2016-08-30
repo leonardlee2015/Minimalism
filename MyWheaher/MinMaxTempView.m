@@ -94,7 +94,7 @@
     _maxRectViewState.midState = [NSValue valueWithCGRect:_maxRectView.frame];
     
     //创建 min Rect View;
-    _minRectView = [[UIView alloc]initWithFrame:ScaleRectMake(gridWidth, gridWidth*2, gridWidth, 0)];
+    _minRectView = [[UIView alloc]initWithFrame:ScaleRectMake(gridWidth, gridWidth*2, gridWidth*2, 0)];
     _minRectView.backgroundColor = [UIColor blackColor];
     _minRectView.alpha = 0.f;
     [containerView addSubview:_minRectView];
@@ -107,7 +107,7 @@
     // 创建 min temp view.
     _minNumView = [[NumberView alloc]initWithNumber:self.minTemp];
     _minNumView.delegate = self;
-    _minNumView.frame = ScaleRectMake(gridWidth, gridWidth, gridWidth, gridWidth);
+    _minNumView.frame = ScaleRectMake(gridWidth, gridWidth, gridWidth*2, gridWidth);
     _minNumView.alpha = 0.f;
     [_minNumView buildView];
     [containerView addSubview:_minNumView];
@@ -237,7 +237,7 @@
     _minNumView.number = _minTemp;
     // 根据温度挑战minRect和minNum的动画状态保存器。
     if (_minTemp >=0) {
-        _minNumViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth, _gridWidth-_minTemp, _gridWidth, _gridWidth)];
+        _minNumViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth, _gridWidth-_minTemp, _gridWidth*2, _gridWidth)];
         _minRectViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth,_gridWidth*2 - _minTemp, _gridWidth, _minTemp)];
     }else{
         
@@ -245,7 +245,7 @@
         _minNumViewState.startState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth, _gridWidth*2, _gridWidth, _gridWidth)];
         _minNumViewState.endState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth, _gridWidth*2, _gridWidth, _gridWidth)];
         
-        _minRectViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth,_gridWidth*2, _gridWidth, fabs(_minTemp))];
+        _minRectViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth,_gridWidth, _gridWidth, fabs(_minTemp))];
         
     }
 }
@@ -255,13 +255,13 @@
     _maxNumView.number = _maxTemp;
     // 根据温度挑战maxRect和maxNum的动画状态保存器。
     if (_maxTemp >=0) {
-        _maxNumViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth-_maxTemp, _gridWidth, _gridWidth)];
+        _maxNumViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth-_maxTemp, _gridWidth*2, _gridWidth)];
         _maxRectViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3,_gridWidth*2 - _maxTemp, _gridWidth, _maxTemp)];
     }else{
         
-        _maxNumViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth*2+ fabs(_maxTemp), _gridWidth, _gridWidth)];
-        _maxNumViewState.startState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth*2, _gridWidth, _gridWidth)];
-        _maxNumViewState.endState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth*2, _gridWidth, _gridWidth)];
+        _maxNumViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth*2+ fabs(_maxTemp), _gridWidth*2, _gridWidth)];
+        _maxNumViewState.startState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth*2, _gridWidth*2, _gridWidth)];
+        _maxNumViewState.endState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3, _gridWidth*2, _gridWidth*2, _gridWidth)];
         
         _maxRectViewState.midState = [NSValue valueWithCGRect:ScaleRectMake(_gridWidth*3,_gridWidth*2, _gridWidth, fabs(_maxTemp))];
         
