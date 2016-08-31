@@ -326,6 +326,7 @@
 		D73B4EB21CC3C7B30091DC4A /* WheatherViewAnimationState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WheatherViewAnimationState.m; sourceTree = "<group>"; };
 		D742D4BF1CC613CF00398B26 /* Coordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coordinate.h; sourceTree = "<group>"; };
 		D742D4C01CC613CF00398B26 /* Coordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Coordinate.m; sourceTree = "<group>"; };
+		D757D44F1D76532A004FAFCE /* Notification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Notification.h; sourceTree = "<group>"; };
 		D759B0C41CC92D1C00D1BB93 /* GetCurrentData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCurrentData.h; sourceTree = "<group>"; };
 		D759B0C51CC92D1C00D1BB93 /* GetCurrentData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetCurrentData.m; sourceTree = "<group>"; };
 		D75C6ABB1CDD017E0031878E /* CityDbData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityDbData.h; sourceTree = "<group>"; };
@@ -700,6 +701,7 @@
 				D73B4E961CC3C7490091DC4A /* NSMutableAttributedString+setAttributes.m */,
 				D73B4E971CC3C7490091DC4A /* Categories.h */,
 				D729FC4E1D73473D001820FB /* Debug.h */,
+				D757D44F1D76532A004FAFCE /* Notification.h */,
 			);
 			name = Categories;
 			sourceTree = "<group>";

@@ -102,6 +102,11 @@ GetHeWeatherDataDelegate
 
     } withIdentifier:ChangedCityHandlerIdentifier];
 
+    //
+    [[NSNotificationCenter defaultCenter]addObserverForName:DidUpdateLocationCityInfoNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+        [self.tableView reloadData];
+    }];
+
 }
 
 -(void)setSearchResultController{
@@ -149,7 +154,7 @@ GetHeWeatherDataDelegate
 
     [footerView addSubview:addCityButton];
     [addCityButton alignTop:@"8" bottom:@"-8" toView:footerView];
-    [addCityButton alignTrailingEdgeWithView:footerView predicate:@"-53"];
+    [addCityButton alignTrailingEdgeWithView:footerView predicate:@"-43"];
     [addCityButton constrainWidth:@"58"];
 
     self.tableView.tableFooterView = footerView;
@@ -409,10 +414,20 @@ GetHeWeatherDataDelegate
 }
 
 -(void)GetHeWeatherData:(GetHeWeatherData *)getData getDataFailWithError:(NSError *)error{
-    NSLog(@"获取数据失败.");
 
-    
+
+
     [self showError];
+
+    // 发送统计信息。
+    NSString *errMsg = [error localizedDescription];
+
+    if (errMsg) {
+        NSDictionary *attributes = @{@"ErrMsg": errMsg };
+        [MobClick event:RequestWeatherDataFailedID attributes:attributes];
+    }else{
+        [MobClick endEvent:RequestWeatherDataFailedID];
+    }
 
 }
 
@@ -477,7 +492,7 @@ NSString *const ChangedCityHandlerIdentifier = @"Changed City Handler";
 -(CityManager *)cityManger{
     if (!_cityManger) {
         _cityManger = [CityManager shareManager];
-                NSLog(@"[%@ CityManager:%@]", NSStringFromClass([self class]), _cityManger);
+
     }
     return _cityManger;
 }

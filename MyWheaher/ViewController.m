@@ -181,7 +181,7 @@ NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler
     _requstingMenu.alpha = 0.f;
 
     [self.view addSubview:_requstingMenu];
-    [_requstingMenu alignTopEdgeWithView:self.view predicate:@"9"];
+    [_requstingMenu alignTopEdgeWithView:self.view predicate:@"17"];
     [_requstingMenu alignLeadingEdgeWithView:self.view predicate:@"16"];
 
 
@@ -192,7 +192,7 @@ NSString *const didupdateCityHanderIdentifier = @"weatherView did update handler
     [_failedMenu addTarget:self action:@selector(pressMenu:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:_failedMenu];
-    [_failedMenu alignTopEdgeWithView:self.view predicate:@"9"];
+    [_failedMenu alignTopEdgeWithView:self.view predicate:@"17"];
     [_failedMenu alignLeadingEdgeWithView:self.view predicate:@"16"];
     _failedMenu.alpha = 0.f;
 }

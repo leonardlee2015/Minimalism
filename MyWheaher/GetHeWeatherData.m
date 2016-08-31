@@ -93,7 +93,7 @@
 
         }else{
             if (self.delegate && [self.delegate respondsToSelector:@selector(GetHeWeatherData:getDataFailWithError:)]) {
-                [self.delegate GetHeWeatherData:self getDataFailWithError:nil];
+                [self.delegate GetHeWeatherData:self getDataFailWithError:NULL];
             }
 
         }
@@ -103,7 +103,7 @@
 }
 
 -(void)canncelPreviousTasks{
-    for (NSURLSessionTask *task in self.client.tasks) {
+    for (NSURLSessionTask *task in self.client.dataTasks) {
         [task cancel];
     }
 }

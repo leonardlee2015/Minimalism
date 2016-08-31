@@ -18,7 +18,6 @@ NSString * const weatherHeaderKey = @"HeWeather data service 3.0";
 NSString *const CumstomDomain = @"com.heweatherRequest.domain";
 
 @interface MWHeWeatherClient ()
-@property(nonnull,nonatomic,strong) NSMutableArray * inCurrentTasks;
 @end
 @implementation MWHeWeatherClient
 
@@ -28,7 +27,6 @@ NSString *const CumstomDomain = @"com.heweatherRequest.domain";
 
     if (self) {
         // 初始化类属性
-        _inCurrentTasks = [NSMutableArray arrayWithCapacity:10];
 
         // 初始化http设置
         self.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -85,12 +83,10 @@ NSString *const CumstomDomain = @"com.heweatherRequest.domain";
 
 
     NSURLSessionDataTask *task = [self GET:path parameters:[dic copy] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [weakSelf.inCurrentTasks removeObject:task];
 
 
 
         // 任务完成把task 从_inCurrentTasks 中删除。
-        [weakSelf.inCurrentTasks removeObject:task];
 
 
         NSString *status;
@@ -120,7 +116,6 @@ NSString *const CumstomDomain = @"com.heweatherRequest.domain";
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
 
         // 任务完成把task 从_inCurrentTasks 中删除。
-        [weakSelf.inCurrentTasks removeObject:task];
 
         if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(MWWeatherClient:didUpdateSucessFailWithError:)]) {
             [weakSelf.delegate MWWeatherClient:weakSelf didUpdateSucessFailWithError:error];
@@ -128,7 +123,6 @@ NSString *const CumstomDomain = @"com.heweatherRequest.domain";
 
     }];
 
-    [_inCurrentTasks addObject:task];
 
     return task;
 }
@@ -166,7 +160,7 @@ NSString *const CumstomDomain = @"com.heweatherRequest.domain";
         return [self _GETURLPath:@"attractions" withParameters:params questDataType: MWHeDataTypeWeatherData];
 
 
-    }else if (cityID.length == 11){
+    }else{
         return [self _GETURLPath:@"weather" withParameters:params questDataType: MWHeDataTypeWeatherData];
 
 
@@ -190,15 +184,6 @@ NSString *const CumstomDomain = @"com.heweatherRequest.domain";
     return [self _GETURLPath:@"condition" withParameters:params questDataType:MWHeDataTypeCouds];
 }
 
--(void)dealloc{
-    for (NSURLSessionDataTask *task in _inCurrentTasks) {
-        [task cancel];
-    }
-}
-@dynamic currentTasks;
--(NSArray *)currentTasks{
-    return [_inCurrentTasks copy];
-}
 
 
 @end

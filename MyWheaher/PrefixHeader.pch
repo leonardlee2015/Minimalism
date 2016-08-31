@@ -27,8 +27,10 @@
 #import "UIImage+BitMap.h"
 #import "NSMutableAttributedString+setAttributes.h"
 #import "NSString+multiRanges.h"
-#import "Debug.h"
 
+// Global Info.
+#import "Debug.h"
+#import "Notification.h"
 
 #endif
 

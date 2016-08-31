@@ -8,9 +8,9 @@
     <customFonts key="customFonts">
         <mutableArray key="Lato-Bold.ttf">
             <string>Lato-Bold</string>
+            <string>Lato-Bold</string>
         </mutableArray>
         <mutableArray key="Lato-Regular.ttf">
-            <string>Lato-Regular</string>
             <string>Lato-Regular</string>
         </mutableArray>
     </customFonts>
@@ -66,22 +66,21 @@
                             </mask>
                         </variation>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30°" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ai-kn-7Ha">
-                        <rect key="frame" x="303" y="41" width="59" height="45"/>
-                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="37"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="广州市" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1TD-h0-hE8">
+                        <rect key="frame" x="28" y="63" width="54" height="22"/>
+                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="18"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="广州市" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1TD-h0-hE8">
-                        <rect key="frame" x="28" y="63" width="54" height="22"/>
-                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="18"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30°" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ai-kn-7Ha">
+                        <rect key="frame" x="255" y="41" width="59" height="45"/>
+                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="37"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="1TD-h0-hE8" firstAttribute="leading" secondItem="O8f-AI-EcI" secondAttribute="trailing" constant="-51" id="0D7-ed-hiy"/>
-                    <constraint firstItem="3Ai-kn-7Ha" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="295" id="69Y-wL-h5y"/>
                     <constraint firstAttribute="bottomMargin" secondItem="3Ai-kn-7Ha" secondAttribute="bottom" constant="19" id="8m5-w6-fpm"/>
                     <constraint firstItem="yJa-zf-AgP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="11" id="9Tk-K8-OVU"/>
                     <constraint firstItem="bsp-2S-6UK" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="Ago-cU-UXE"/>
@@ -103,6 +102,7 @@
                     <constraint firstAttribute="bottomMargin" secondItem="1TD-h0-hE8" secondAttribute="bottom" constant="20" id="l3e-UB-osI"/>
                     <constraint firstItem="O8f-AI-EcI" firstAttribute="leading" secondItem="3iu-XU-1tF" secondAttribute="trailing" constant="4" id="qgf-Y2-YFY"/>
                     <constraint firstItem="bdZ-z6-JDO" firstAttribute="leading" secondItem="O8f-AI-EcI" secondAttribute="trailing" constant="3" id="tRe-55-5Ko"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="3Ai-kn-7Ha" secondAttribute="trailing" constant="35" id="urQ-Vp-wi1"/>
                     <constraint firstItem="O8f-AI-EcI" firstAttribute="leading" secondItem="yJa-zf-AgP" secondAttribute="trailing" constant="2" id="y6s-Qe-sLc"/>
                 </constraints>
                 <variation key="default">

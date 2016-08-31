@@ -44,6 +44,7 @@ GetCurrentDataDelegate
     UpdatingView *_updatingView;
     FailedLongPressView *_failLongPressView;
     WeatherViewStyle  _style;
+    BOOL _didSetLocationCity;
 
 
 
@@ -205,6 +206,7 @@ GetCurrentDataDelegate
     self.status = WeatherViewRequesting;
 }
 -(void)showFailedView{
+    [_weatherView hide];
     [_fadeBlackView hide];
     [_updatingView hide];
 
@@ -252,7 +254,6 @@ GetCurrentDataDelegate
 
         DLog(@"定位失败，定位服务关闭！");
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.weatherView hide];
             [self showFailedView];
         });
 
@@ -391,47 +392,91 @@ GetCurrentDataDelegate
                      type:TWMessageBarMessageTypeError];
                 });
 
-
                 // 发送统计信息。
                 NSString *errMsg = [error localizedDescription];
-
                 if (errMsg) {
+
                     NSDictionary *attributes = @{@"ErrMsg": errMsg };
                     [MobClick event:DecoderLocationFailedID attributes:attributes];
                 }else{
+
                     [MobClick endEvent:DecoderLocationFailedID];
                 }
 
             }else if (isUsingHeWeatherData) {
 
-
                 if([self isZHLanguageenvironment]){
-                    cityName = [cityName substringWithRange:NSMakeRange(0, cityName.length-1)];
-                    province = [province substringWithRange:NSMakeRange(0, province.length-1)];
 
-                    city = [DB requestHeWeatherCityByZHName:cityName province:province];
+                    if ([CtyCode isEqualToString:@"CN"]) {
+                        if (
+                            [cityName containsString:@"香港"]||
+                            [cityName containsString:@"澳门"]||
+                            [cityName containsString:@"澳門"]
+                             ) {
+
+                            cityName = [cityName substringWithRange:NSMakeRange(0, 2)];
+                            province = [province substringWithRange:NSMakeRange(0, province.length-1)];
+
+
+                        }else{
+                            cityName = [cityName substringWithRange:NSMakeRange(0, cityName.length-1)];
+                            province = [province substringWithRange:NSMakeRange(0, province.length-1)];
+
+                        }
+
+
+                        city = [DB requestHeWeatherCityByZHName:cityName province:province];
+                    }
+
                 }else{
+
                     if ([CtyCode isEqualToString:@"CN"]) {
 
                         city = [DB requestHeWeatherCNCityByPinyin:cityName];
+
                     }else{
+
                         city = [DB requestHeWeatherCityByName:cityName];
                     }
                 }
 
 
                 if (city) {
-                    [CityManager shareManager].locatedCity = [city copy];
+                    // 更新定位城市数据
+                    City *locationCity = [CityManager shareManager].locatedCity;
+                    locationCity.cityId = city.cityId;
+                    locationCity.cityName = city.cityName;
+                    locationCity.ZHCityName = city.ZHCityName;
+                    locationCity.country = city.country;
+
+                    // 发送定位城市数据更新通知
+                    [self pushDidUpdateLocationCityInfoNotification];
+                    //
+                    _getHeWeatherData.cityName = city.cityName;
+                    _getHeWeatherData.cityId = city.cityId;
+
+                }else{
+
+                    _getHeWeatherData.cityName = cityName;
 
                 }
 
-                _getHeWeatherData.cityName = city.cityName;
-                _getHeWeatherData.cityId = city.cityId;
+
 
                 if (enableRequstWeather ) {
 
                     enableRequstWeather = NO;
-                    [_getHeWeatherData requestWithCityId];
+                    if (_getHeWeatherData.cityId) {
+                        [_getHeWeatherData requestWithCityId];
+
+                    }else if(_getHeWeatherData.cityName){
+
+                        [_getHeWeatherData requestWithCityName];
+
+                    }else{
+
+                        [self showFailedView];
+                    }
 
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         enableRequstWeather = YES;
@@ -444,13 +489,15 @@ GetCurrentDataDelegate
                 if ([self isZHLanguageenvironment]) {
                     
                     city = [DB requestCityByZHCityName:cityName provinceName:province];
+
                 }else{
                     city = [DB requestCityByCityName:cityName];
-
                 }
+
                 if (city) {
                     [CityManager shareManager].locatedCity = [city copy];
                 }
+
                 _getCurrentdata.cityName = cityName;
                 _getCurrentdata.cityId = city.cityId;
                 _getCurrentdata.ZNCithName = city.ZHCityName;
@@ -478,14 +525,11 @@ GetCurrentDataDelegate
 #endif
     }];
 #endif
+}
 
-
-
-
-
-
-
-
+-(void)pushDidUpdateLocationCityInfoNotification{
+    [[NSNotificationCenter defaultCenter] postNotificationName:DidUpdateLocationCityInfoNotification object:self ];
+    _didSetLocationCity = YES;
 }
 
 -(BOOL)isZHLanguageenvironment{
@@ -590,7 +634,17 @@ GetCurrentDataDelegate
     if (weatherData) {
 
         if (_style == WeatherViewStyleLocationCity) {
-            [CityManager shareManager].locatedCity.cityId = weatherData.city.cityId;
+            City *locationCity = [CityManager shareManager].locatedCity;
+            locationCity.cityId = weatherData.city.cityId;
+            locationCity.cityName = weatherData.city.cityName;
+            locationCity.ZHCityName = weatherData.city.ZHCityName;
+            locationCity.country = weatherData.city.country;
+
+            // 如果未设置定位城市，发送定位城市信息更新数据。
+            if (!_didSetLocationCity) {
+                [self pushDidUpdateLocationCityInfoNotification];
+
+            }
         }
         // 先隐藏再显示。
         [_weatherView hide];

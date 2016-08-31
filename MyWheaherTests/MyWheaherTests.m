@@ -385,6 +385,23 @@ NSString *const ADDKey = @"add";
 
 
 }
+-(void)testIsContainChinese{
+
+    NSString * chinese = @"adfa ";
+
+    XCTAssert([self IsChinese:chinese], @"fun not work");
+}
+
+-(BOOL)IsChinese:(NSString *)str {
+    for(int i=0; i< [str length];i++)
+    {
+        int a = [str characterAtIndex:i];
+        if( a > 0x4e00 && a < 0x9fff)
+        {
+            return YES;
+        }
+    } return NO;
+}
 #pragma mark - delegate
 
 -(void)searchCityData:(SearchCityData *)searchCityData didUpdateSucessWithData:(NSArray *)cities{

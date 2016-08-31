@@ -45,13 +45,7 @@
     [self addSubview:self.lineBackgroundView];
 }
 
-- (void)show {
-    
-}
 
-- (void)hide {
-    
-}
 
 - (void)buildView {
     

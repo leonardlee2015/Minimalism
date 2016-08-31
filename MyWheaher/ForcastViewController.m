@@ -224,22 +224,25 @@ NSString *const DismissForcastViewCNotification = @"Dismiss Forcast View Control
 
 
         titleView.countryCode = self.forcastWeatherData.city.country;
+        NSString *cityName;
 
         if ([titleView.countryCode isEqualToString:@"CN"]) {
-            NSString *temp = self.forcastWeatherData.city.cityName;
 
-            temp = [[CityDbData shareCityDbData] requestZhCityNameByCityName:temp];
-            temp = [temp stringByAppendingString:@"市"];
-            if (temp) {
-
-                titleView.cityName = [self addSpaceForZHStr:temp];
-
+            if (self.forcastWeatherData.city.ZHCityName) {
+                cityName = self.forcastWeatherData.city.ZHCityName;
 
             }else{
-                titleView.cityName    = self.forcastWeatherData.city.cityName;
+                cityName = self.forcastWeatherData.city.cityName;
             }
         }else{
-            titleView.cityName    = self.forcastWeatherData.city.cityName;
+            cityName = self.forcastWeatherData.city.cityName;
+
+        }
+        if (cityName) {
+            titleView.cityName = [NSString  stringWithFormat:@"    %@",cityName];
+
+        }else{
+            titleView.cityName = @"";
         }
 
         UIView *line         = [[UIView alloc] initWithFrame:CGRectMake(0, HEIGHT - WIDTH * 1.5 - 1, WIDTH, 0.5)];

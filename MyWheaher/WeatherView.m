@@ -307,8 +307,9 @@
 
 #pragma mark - UIScrollViewDelegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGFloat moreHeight = scrollView.contentSize.height - self.height;
 
-    CGFloat percent = scrollView.contentOffset.y /60.f;
+    CGFloat percent = (scrollView.contentOffset.y - fabs(moreHeight))/60.f;
     [_showDownView showPercent:percent];
 
     CGFloat offsetY = -scrollView.contentOffset.y;
@@ -333,7 +334,9 @@
 
     }
 
-    if (offsetY > 60.f) {
+    CGFloat moreHeight = scrollView.contentSize.height - self.height;
+
+    if (offsetY > fabsf(moreHeight) + 60.f) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(weatherViewPullDown:)]){
             [self.delegate weatherViewPullDown:self];
         }

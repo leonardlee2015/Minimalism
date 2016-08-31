@@ -97,7 +97,9 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 }
 
 -(NSString*)documentPath{
-    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    // return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+
 }
 
 -(void)updateHeCityList{
@@ -373,7 +375,7 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 }
 
 -(City *)requestHeWeatherCNCityByPinyin:(NSString *)pingying{
-    City *city = [City new];
+    City *city;
 
     if (![_db open]) {
         return nil;
@@ -389,6 +391,8 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     }
 
     if ([resultSet next]) {
+        city = [City new];
+
         city.cityName = [resultSet stringForColumn:@"pinyin"];
         city.ZHCityName = [resultSet stringForColumn:@"city"];
         city.cityId =  [resultSet stringForColumn:@"id"];
@@ -400,7 +404,7 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 }
 
 -(City *)requestHeWeatherCNCityByCityID:(NSString *)cityID{
-    City *city = [City new];
+    City *city;
 
     if (![_db open]) {
         return nil;
@@ -416,6 +420,8 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     }
 
     if ([resultSet next]) {
+        city = [City new];
+
         city.cityName = [resultSet stringForColumn:@"pinyin"];
         city.ZHCityName = [resultSet stringForColumn:@"city"];
         city.cityId =  [resultSet stringForColumn:@"id"];
@@ -427,7 +433,7 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 }
 
 -(City *)requestCityByCityName:(NSString *)name{
-    City *city = [City new];
+    City *city;
 
     if (![_db open]) {
         return nil;
@@ -443,6 +449,8 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     }
 
     if ([resultSet next]) {
+        city = [City new];
+
         city.cityName = [resultSet stringForColumn:@"name"];
         city.country = [resultSet stringForColumn:@"country"];
         city.cityId =  [resultSet stringForColumn:@"id"];
@@ -472,7 +480,7 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 }
 
 -(City *)requestCityByZHCityName:(NSString *)ZHname provinceName:(NSString *)provinceName{
-    City *city = [City new];
+    City *city ;
 
     if (![_db open]) {
         DLog(@"open db failed: %@",[_db lastErrorMessage]);
@@ -489,6 +497,8 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     }
 
     if ([result next]) {
+        city = [City new];
+
         city.cityId = [result stringForColumn:@"id"];
         city.cityName = [result stringForColumn:@"pinyin"];
         city.ZHCityName = [result stringForColumn:@"name"];
@@ -500,7 +510,7 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 }
 
 -(City *)requestHeWeatherCityByName:(NSString *)name{
-    City *city = [City new];
+    City *city ;
 
     if (![_db open]) {
         return nil;
@@ -517,6 +527,7 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     }
 
     if ([resultSet next]) {
+        city = [City new];
         city.cityName = [resultSet stringForColumn:@"city"];
         city.cityId = [resultSet stringForColumn:@"id"];
         city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
@@ -527,7 +538,7 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 
 -(City *)requestHeWeatherCityByZHName:(NSString *)ZHName province:(NSString *)province{
 
-    City *city = [City new];
+    City *city ;
 
     if (![_db open]) {
         DLog(@"open db failed: %@",[_db lastErrorMessage]);
@@ -544,10 +555,13 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     }
 
     if ([result next]) {
+        city  =  [City new];
+
         city.cityId = [result stringForColumn:@"id"];
         city.cityName = [result stringForColumn:@"pinyin"];
         city.ZHCityName = [result stringForColumn:@"name"];
         city.country = [city.cityId substringWithRange:NSMakeRange(0, 2)];
+
     }
 
     return city;
@@ -558,7 +572,17 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 
     NSMutableArray *cities = [NSMutableArray array];
 
-    NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM he_city_list  where city like '%%%@%%' COLlATE NOCASE AND length(id) = 11",condition];
+
+    NSString *querySQL;
+    
+    if ([self containsChinese:condition]) {
+        querySQL = [NSString stringWithFormat:@"SELECT * FROM he_city_list  where city like '%%%@%%' COLlATE NOCASE AND length(id) = 11",condition];
+    }else{
+        querySQL = [NSString stringWithFormat:@"SELECT * FROM he_city_list  where city like '%%%@%%' COLlATE NOCASE ",condition];
+
+    }
+
+
 
     if (![_db open]) {
         return nil;
@@ -603,6 +627,19 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
     return [cities copy];
 
 
+
+
+}
+
+-(BOOL)containsChinese:(NSString *)str {
+    for(int i=0; i< [str length];i++)
+    {
+        int a = [str characterAtIndex:i];
+        if( a > 0x4e00 && a < 0x9fff)
+        {
+            return YES;
+        }
+    } return NO;
 }
 #pragma mark -  He City data 
 

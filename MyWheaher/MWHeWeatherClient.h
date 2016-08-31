@@ -34,7 +34,6 @@ extern NSString* const _Nonnull weatherHeaderKey;
 
 @interface MWHeWeatherClient : AFHTTPSessionManager
 @property(nullable,weak,nonatomic) id<MWHeWeatherClientDelegate>delegate;
-@property(nonatomic,nonnull,readonly) NSArray *currentTasks;
 
 +(nullable MWHeWeatherClient*)shareClient;
 +(nullable MWHeWeatherClient*)client;

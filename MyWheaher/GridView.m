@@ -80,7 +80,7 @@
     
     __weak typeof(self) weakSelf = self;
     animation.completionBlock = ^(POPAnimation *anim, BOOL finished){
-        NSLog(@"%@", NSStringFromCGRect(weakSelf.maskLayer.frame));
+       // NSLog(@"%@", NSStringFromCGRect(weakSelf.maskLayer.frame));
     };
     [self.maskLayer pop_addAnimation:animation forKey:nil];
     
@@ -99,7 +99,7 @@
     animation.toValue = @(self.startPositionX);
     __weak typeof(self) weakSelf = self;
     animation.completionBlock = ^(POPAnimation *anim, BOOL finished){
-        NSLog(@"%@", NSStringFromCGRect(weakSelf.maskLayer.frame));
+        //NSLog(@"%@", NSStringFromCGRect(weakSelf.maskLayer.frame));
     };
 
     [self.maskLayer pop_addAnimation:animation forKey:nil];
