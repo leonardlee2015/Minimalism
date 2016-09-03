@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *cityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *temperatureLabel;
 @property (nonnull,strong,nonatomic) LineBackgroundView *BGView;
+@property (weak, nonatomic) IBOutlet UILabel *countryLabel;
 
 @end
 @implementation CityCell
@@ -79,6 +80,14 @@
 
     }else{
         _temperatureLabel.text = [NSString stringWithFormat:@"%ld°" , [city.temperature integerValue]];
+    }
+
+    if (!city.country || city.country.length<=0) {
+        self.countryLabel.text = @"AP";
+
+    }else{
+        self.countryLabel.text = city.country;
+
     }
 
 }

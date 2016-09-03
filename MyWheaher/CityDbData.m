@@ -174,8 +174,8 @@ static NSString * const ImportHeUpdateTimeFlag = @"Import he update time Flag";
 
     __block BOOL isImportCityData = [[[NSUserDefaults standardUserDefaults]valueForKey:ImportCityDataFlag] boolValue];
 
-    __block BOOL isImportCityConvertData = [[NSUserDefaults standardUserDefaults]valueForKey:ImportCityConvertFlag];
-    __block BOOL isImportCityListData = [[NSUserDefaults standardUserDefaults]valueForKey:ImportCityListFlag];
+    __block BOOL isImportCityConvertData = [[[NSUserDefaults standardUserDefaults]valueForKey:ImportCityConvertFlag] boolValue];
+    __block BOOL isImportCityListData = [[[NSUserDefaults standardUserDefaults]valueForKey:ImportCityListFlag] boolValue];
 
 
 

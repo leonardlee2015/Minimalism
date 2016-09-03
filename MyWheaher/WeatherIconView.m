@@ -56,6 +56,8 @@
     _coudIconView.x = _coudIconView.x - MOD(10);
     _coudIconView.y = _coudIconView.y - MOD(10);
 
+    _coudIconView.alpha = 0.f;
+
 
     if (isUsingHeWeatherData) {
         [self addSubview:_coudIconView];
@@ -90,6 +92,8 @@
     [_titleLabel showByDuration:duration delay:delay];
 
     _upLabel.alpha = 0.f;
+    _coudIconView.alpha = 0.f;
+
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveLinear animations:^{
         _upLabel.alpha = 1.f;
         _coudIconView.alpha = 1.f;

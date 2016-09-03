@@ -44,8 +44,8 @@
 
 -(void)updateHeCityList;
 
--(nullable City *)requestCityByCityName:(NSString *)name;
--(nullable City*)requestCityByZHCityName:(NSString *)ZHname provinceName:(nonnull NSString*)provinceName;
+-(nullable City *)requestCityByCityName:(nonnull NSString *)name;
+-(nullable City*)requestCityByZHCityName:(nonnull NSString *)ZHname provinceName:(nonnull NSString*)provinceName;
 
 
 -(nullable City*)requestHeWeatherCNCityByPinyin:(nonnull NSString*) pingying;

@@ -89,7 +89,8 @@ GetCurrentDataDelegate
     _getCurrentdata = [GetCurrentData new];
     _getCurrentdata.delegate = self;
 
-    _getHeWeatherData = [[GetHeWeatherData alloc]initWithDelegate:self];
+    __weak typeof(self) weakSelf = self;
+    _getHeWeatherData = [[GetHeWeatherData alloc]initWithDelegate: weakSelf];
 
     // 添加 weather view
     _weatherView = [[WeatherView alloc]initWithFrame:self.view.bounds];
@@ -199,7 +200,7 @@ GetCurrentDataDelegate
 
 }
 -(void)showRequstingView{
-    [_weatherView hide];
+    //[_weatherView hide];
     [_fadeBlackView show];
     [_updatingView show];
 
@@ -496,11 +497,13 @@ GetCurrentDataDelegate
 
                 if (city) {
                     [CityManager shareManager].locatedCity = [city copy];
+
+                    _getCurrentdata.cityName = cityName;
+                    _getCurrentdata.cityId = city.cityId;
+                    _getCurrentdata.ZNCithName = city.ZHCityName;
                 }
 
-                _getCurrentdata.cityName = cityName;
-                _getCurrentdata.cityId = city.cityId;
-                _getCurrentdata.ZNCithName = city.ZHCityName;
+
 
                 if (enableRequstWeather ) {
 

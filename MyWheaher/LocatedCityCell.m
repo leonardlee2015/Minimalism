@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *CityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *TemperatureLabel;
+@property (weak, nonatomic) IBOutlet UILabel *countyLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *imdicateImageView;
 @property (nonnull,strong,nonatomic) LineBackgroundView *BGView;
 
@@ -72,7 +73,16 @@
         _TemperatureLabel.text = @"20°";
 
     }else{
-        _TemperatureLabel.text = [NSString stringWithFormat:@"%d°" , [city.temperature integerValue]];
+        _TemperatureLabel.text = [NSString stringWithFormat:@"%ld°" , [city.temperature integerValue]];
+    }
+
+
+    if (!city.country || city.country.length<=0) {
+        self.countyLabel.text = @"AP";
+
+    }else{
+        self.countyLabel.text = city.country;
+        
     }
 
 

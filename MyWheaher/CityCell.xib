@@ -94,6 +94,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="cityLabel" destination="ymy-LG-bPX" id="5Lb-N6-NXB"/>
+                <outlet property="countryLabel" destination="f87-Ii-AQV" id="U4r-TH-jsz"/>
                 <outlet property="temperatureLabel" destination="KYE-fT-MGW" id="qOH-xW-fYM"/>
                 <outlet property="timeLabel" destination="KE3-P7-n9a" id="KtD-a5-Ciq"/>
             </connections>

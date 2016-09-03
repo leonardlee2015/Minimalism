@@ -41,7 +41,7 @@
     // Override point for customization after application launch.
 
     // 设置AFNetworking 网络活动监视器。
-#ifdef M_DEBUG
+#ifdef DEBUG
     [[AFNetworkActivityLogger sharedLogger]startLogging];
     
     [AFNetworkActivityLogger sharedLogger].level = AFLoggerLevelDebug;

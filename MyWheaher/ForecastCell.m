@@ -209,12 +209,12 @@
     ForcastWeather *weatherData = data;
     // 最高温度
     NSInteger iMaxTemp = [weatherData.temp.maxTemp integerValue];
-    NSString *maxTemp  = [NSString stringWithFormat:@"%ld°",iMaxTemp];
+    NSString *maxTemp  = [NSString stringWithFormat:@"%ld°",(long)iMaxTemp];
     self.maxTempLabel.text = maxTemp;
     
     // 最低温度
     NSInteger iMinTemp = [weatherData.temp.minTemp integerValue];
-    NSString *minTemp = [NSString stringWithFormat:@"%ld°",iMinTemp];
+    NSString *minTemp = [NSString stringWithFormat:@"%ld°",(long)iMinTemp];
     self.minTempLabel.text = minTemp;
     
 

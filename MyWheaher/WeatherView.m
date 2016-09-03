@@ -336,7 +336,7 @@
 
     CGFloat moreHeight = scrollView.contentSize.height - self.height;
 
-    if (offsetY > fabsf(moreHeight) + 60.f) {
+    if (offsetY > fabs(moreHeight) + 60.f) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(weatherViewPullDown:)]){
             [self.delegate weatherViewPullDown:self];
         }

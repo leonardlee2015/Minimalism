@@ -121,6 +121,7 @@
             <connections>
                 <outlet property="CityLabel" destination="1TD-h0-hE8" id="6B9-Yq-bJE"/>
                 <outlet property="TemperatureLabel" destination="3Ai-kn-7Ha" id="aUu-6Q-0JZ"/>
+                <outlet property="countyLabel" destination="3iu-XU-1tF" id="50O-oP-PEl"/>
                 <outlet property="imdicateImageView" destination="bdZ-z6-JDO" id="Ozh-aB-BFE"/>
                 <outlet property="timeLabel" destination="O8f-AI-EcI" id="fgn-eh-lDI"/>
             </connections>

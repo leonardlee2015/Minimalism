@@ -12,12 +12,12 @@
 
 @interface WeatherNumberMeaningTransform : NSObject
 
-+ (NSString *)fontTextWeatherNumber:(NSNumber *)number;
-+ (UIColor *)iconColor:(NSNumber *)number;
++ (nullable NSString *)fontTextWeatherNumber:(nonnull NSNumber *)number;
++ (nullable UIColor *)iconColor:(nonnull NSNumber *)number;
 
 
-+(nullable UIColor*)heIconColor:(NSNumber*)number;
-+ (BOOL)flashFlagByWeatherCode:(NSNumber*)code;
++(nullable UIColor*)heIconColor:(nonnull NSNumber*)number;
++ (BOOL)flashFlagByWeatherCode:(nonnull NSNumber*)code;
 
 #ifdef EMITTER
 + (EMitterType)emitterTypeWithNumber:(NSNumber *)number;

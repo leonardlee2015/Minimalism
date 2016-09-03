@@ -100,7 +100,6 @@
 }
 
 - (void)show {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 
     
     [UIView animateWithDuration:1.f animations:^{

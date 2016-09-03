@@ -38,7 +38,5 @@
 -(void)requestWithCityName:(nonnull NSString*)cityName;
 -(void)requestWithCityIds:(nonnull NSArray<NSString*>*)cityIds;
 
--(void)suspendAllTask;
--(void)startAllTask;
 
 @end

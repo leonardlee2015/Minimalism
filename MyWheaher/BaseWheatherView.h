@@ -47,7 +47,7 @@
 /**
  *  @brief  delegate
  */
-@property (nonatomic,weak) id<BaseWheatherViewDelegate> delegate;
+@property (nonatomic,weak,nullable) id<BaseWheatherViewDelegate> delegate;
 /**
  *  @author ctd.leonard, 15-09-16 11:09:32
  *

@@ -29,7 +29,7 @@
 @end
 
 @implementation GetHeWeatherData
--(instancetype)initWithDelegate:(__weak id<GetHeWeatherDataDelegate>)delegate{
+-(instancetype)initWithDelegate:(_Nullable id<GetHeWeatherDataDelegate>)delegate{
     self = [super init];
     if (self) {
         self.delegate = delegate;
@@ -139,9 +139,12 @@
     if (_multiReqeust) {
         _multiReqCount++;
         CurrentWeatherData *weatherData = [self curentWeatherDataWithWeather:weather];
-        [_multiWeatherDatas setObject:weatherData forKey:weatherData.city.cityId];
-        [_inMultiWeatherDatas addObject:weatherData];
+        if (weatherData.city.cityId) {
 
+            [_multiWeatherDatas setObject:weatherData forKey:weatherData.city.cityId];
+            [_inMultiWeatherDatas addObject:weatherData];
+
+        }
         dispatch_group_leave(_group);
         //[self.client requestCityWeatherdataByID:_cityIDs[_multiReqCount]];
 
